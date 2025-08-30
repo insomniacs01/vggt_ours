@@ -11,8 +11,8 @@ from .track_modules.base_track_predictor import BaseTrackerPredictor
 
 class TrackHead(nn.Module):
     """
-    Track head that uses DPT head to process tokens and BaseTrackerPredictor for tracking.
-    The tracking is performed iteratively, refining predictions over multiple iterations.
+    跟踪头，使用DPT头处理令牌，并使用BaseTrackerPredictor进行跟踪。
+    跟踪是迭代执行的，通过多次迭代优化预测。
     """
 
     def __init__(
@@ -28,38 +28,38 @@ class TrackHead(nn.Module):
         hidden_size=384,
     ):
         """
-        Initialize the TrackHead module.
+        初始化TrackHead模块。
 
-        Args:
-            dim_in (int): Input dimension of tokens from the backbone.
-            patch_size (int): Size of image patches used in the vision transformer.
-            features (int): Number of feature channels in the feature extractor output.
-            iters (int): Number of refinement iterations for tracking predictions.
-            predict_conf (bool): Whether to predict confidence scores for tracked points.
-            stride (int): Stride value for the tracker predictor.
-            corr_levels (int): Number of correlation pyramid levels
-            corr_radius (int): Radius for correlation computation, controlling the search area.
-            hidden_size (int): Size of hidden layers in the tracker network.
+        参数：
+            dim_in (int): 来自主干的令牌输入维度。
+            patch_size (int): vision transformer中使用的图像patch大小。
+            features (int): 特征提取器输出中的特征通道数。
+            iters (int): 跟踪预测的优化迭代次数。
+            predict_conf (bool): 是否为跟踪点预测置信度分数。
+            stride (int): 跟踪器预测器的步幅值。
+            corr_levels (int): 相关金字塔层级数
+            corr_radius (int): 相关计算的半径，控制搜索区域。
+            hidden_size (int): 跟踪器网络中隐藏层的大小。
         """
         super().__init__()
 
         self.patch_size = patch_size
 
-        # Feature extractor based on DPT architecture
-        # Processes tokens into feature maps for tracking
+        # 基于DPT架构的特征提取器
+        # 将令牌处理成用于跟踪的特征图
         self.feature_extractor = DPTHead(
             dim_in=dim_in,
             patch_size=patch_size,
             features=features,
-            feature_only=True,  # Only output features, no activation
-            down_ratio=2,  # Reduces spatial dimensions by factor of 2
+            feature_only=True,  # 仅输出特征，不进行激活
+            down_ratio=2,  # 将空间维度减少2倍
             pos_embed=False,
         )
 
-        # Tracker module that predicts point trajectories
-        # Takes feature maps and predicts coordinates and visibility
+        # 预测点轨迹的跟踪器模块
+        # 获取特征图并预测坐标和可见性
         self.tracker = BaseTrackerPredictor(
-            latent_dim=features,  # Match the output_dim of feature extractor
+            latent_dim=features,  # 匹配特征提取器的output_dim
             predict_conf=predict_conf,
             stride=stride,
             corr_levels=corr_levels,
@@ -71,34 +71,34 @@ class TrackHead(nn.Module):
 
     def forward(self, aggregated_tokens_list, images, patch_start_idx, query_points=None, iters=None):
         """
-        Forward pass of the TrackHead.
+        TrackHead的前向传播。
 
-        Args:
-            aggregated_tokens_list (list): List of aggregated tokens from the backbone.
-            images (torch.Tensor): Input images of shape (B, S, C, H, W) where:
-                                   B = batch size, S = sequence length.
-            patch_start_idx (int): Starting index for patch tokens.
-            query_points (torch.Tensor, optional): Initial query points to track.
-                                                  If None, points are initialized by the tracker.
-            iters (int, optional): Number of refinement iterations. If None, uses self.iters.
+        参数：
+            aggregated_tokens_list (list): 来自主干的聚合令牌列表。
+            images (torch.Tensor): 输入图像，形状为(B, S, C, H, W)，其中：
+                                   B = 批大小，S = 序列长度。
+            patch_start_idx (int): patch令牌的起始索引。
+            query_points (torch.Tensor, optional): 要跟踪的初始查询点。
+                                                  如果为None，点由跟踪器初始化。
+            iters (int, optional): 优化迭代次数。如果为None，使用self.iters。
 
-        Returns:
+        返回：
             tuple:
-                - coord_preds (torch.Tensor): Predicted coordinates for tracked points.
-                - vis_scores (torch.Tensor): Visibility scores for tracked points.
-                - conf_scores (torch.Tensor): Confidence scores for tracked points (if predict_conf=True).
+                - coord_preds (torch.Tensor): 跟踪点的预测坐标。
+                - vis_scores (torch.Tensor): 跟踪点的可见性分数。
+                - conf_scores (torch.Tensor): 跟踪点的置信度分数（如果predict_conf=True）。
         """
         B, S, _, H, W = images.shape
 
-        # Extract features from tokens
-        # feature_maps has shape (B, S, C, H//2, W//2) due to down_ratio=2
+        # 从令牌中提取特征
+        # feature_maps的形状为(B, S, C, H//2, W//2)，因为down_ratio=2
         feature_maps = self.feature_extractor(aggregated_tokens_list, images, patch_start_idx)
 
-        # Use default iterations if not specified
+        # 如果未指定，使用默认迭代次数
         if iters is None:
             iters = self.iters
 
-        # Perform tracking using the extracted features
+        # 使用提取的特征执行跟踪
         coord_preds, vis_scores, conf_scores = self.tracker(query_points=query_points, fmaps=feature_maps, iters=iters)
 
         return coord_preds, vis_scores, conf_scores

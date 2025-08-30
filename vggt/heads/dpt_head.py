@@ -5,7 +5,7 @@
 # LICENSE file in the root directory of this source tree.
 
 
-# Inspired by https://github.com/DepthAnything/Depth-Anything-V2
+# 灵感来源于 https://github.com/DepthAnything/Depth-Anything-V2
 
 
 import os
@@ -20,24 +20,24 @@ from .utils import create_uv_grid, position_grid_to_embed
 
 class DPTHead(nn.Module):
     """
-    DPT  Head for dense prediction tasks.
+    用于密集预测任务的DPT头。
 
-    This implementation follows the architecture described in "Vision Transformers for Dense Prediction"
-    (https://arxiv.org/abs/2103.13413). The DPT head processes features from a vision transformer
-    backbone and produces dense predictions by fusing multi-scale features.
+    该实现遵循"Vision Transformers for Dense Prediction"中描述的架构
+    (https://arxiv.org/abs/2103.13413)。DPT头处理来自vision transformer
+    主干的特征，并通过融合多尺度特征产生密集预测。
 
-    Args:
-        dim_in (int): Input dimension (channels).
-        patch_size (int, optional): Patch size. Default is 14.
-        output_dim (int, optional): Number of output channels. Default is 4.
-        activation (str, optional): Activation type. Default is "inv_log".
-        conf_activation (str, optional): Confidence activation type. Default is "expp1".
-        features (int, optional): Feature channels for intermediate representations. Default is 256.
-        out_channels (List[int], optional): Output channels for each intermediate layer.
-        intermediate_layer_idx (List[int], optional): Indices of layers from aggregated tokens used for DPT.
-        pos_embed (bool, optional): Whether to use positional embedding. Default is True.
-        feature_only (bool, optional): If True, return features only without the last several layers and activation head. Default is False.
-        down_ratio (int, optional): Downscaling factor for the output resolution. Default is 1.
+    参数：
+        dim_in (int): 输入维度（通道数）。
+        patch_size (int, optional): Patch大小。默认为14。
+        output_dim (int, optional): 输出通道数。默认为4。
+        activation (str, optional): 激活类型。默认为"inv_log"。
+        conf_activation (str, optional): 置信度激活类型。默认为"expp1"。
+        features (int, optional): 中间表示的特征通道。默认为256。
+        out_channels (List[int], optional): 每个中间层的输出通道。
+        intermediate_layer_idx (List[int], optional): 用于DPT的聚合令牌中的层索引。
+        pos_embed (bool, optional): 是否使用位置嵌入。默认为True。
+        feature_only (bool, optional): 如果为True，仅返回特征而不经过最后几层和激活头。默认为False。
+        down_ratio (int, optional): 输出分辨率的下采样因子。默认为1。
     """
 
     def __init__(
@@ -65,12 +65,12 @@ class DPTHead(nn.Module):
 
         self.norm = nn.LayerNorm(dim_in)
 
-        # Projection layers for each output channel from tokens.
+        # 从令牌到每个输出通道的投影层。
         self.projects = nn.ModuleList(
             [nn.Conv2d(in_channels=dim_in, out_channels=oc, kernel_size=1, stride=1, padding=0) for oc in out_channels]
         )
 
-        # Resize layers for upsampling feature maps.
+        # 用于上采样特征图的调整大小层。
         self.resize_layers = nn.ModuleList(
             [
                 nn.ConvTranspose2d(
@@ -88,7 +88,7 @@ class DPTHead(nn.Module):
 
         self.scratch = _make_scratch(out_channels, features, expand=False)
 
-        # Attach additional modules to scratch.
+        # 将额外模块附加到scratch。
         self.scratch.stem_transpose = None
         self.scratch.refinenet1 = _make_fusion_block(features)
         self.scratch.refinenet2 = _make_fusion_block(features)
@@ -120,37 +120,37 @@ class DPTHead(nn.Module):
         frames_chunk_size: int = 8,
     ) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
         """
-        Forward pass through the DPT head, supports processing by chunking frames.
-        Args:
-            aggregated_tokens_list (List[Tensor]): List of token tensors from different transformer layers.
-            images (Tensor): Input images with shape [B, S, 3, H, W], in range [0, 1].
-            patch_start_idx (int): Starting index for patch tokens in the token sequence.
-                Used to separate patch tokens from other tokens (e.g., camera or register tokens).
-            frames_chunk_size (int, optional): Number of frames to process in each chunk.
-                If None or larger than S, all frames are processed at once. Default: 8.
+        通过DPT头的前向传播，支持通过分块帧进行处理。
+        参数：
+            aggregated_tokens_list (List[Tensor]): 来自不同transformer层的令牌张量列表。
+            images (Tensor): 输入图像，形状为[B, S, 3, H, W]，范围为[0, 1]。
+            patch_start_idx (int): 令牌序列中patch令牌的起始索引。
+                用于从其他令牌（如相机或寄存器令牌）中分离patch令牌。
+            frames_chunk_size (int, optional): 每个块中要处理的帧数。
+                如果为None或大于S，则一次处理所有帧。默认：8。
 
-        Returns:
-            Tensor or Tuple[Tensor, Tensor]:
-                - If feature_only=True: Feature maps with shape [B, S, C, H, W]
-                - Otherwise: Tuple of (predictions, confidence) both with shape [B, S, 1, H, W]
+        返回：
+            Tensor或Tuple[Tensor, Tensor]：
+                - 如果feature_only=True：形状为[B, S, C, H, W]的特征图
+                - 否则：(预测，置信度)元组，两者形状均为[B, S, 1, H, W]
         """
         B, S, _, H, W = images.shape
 
-        # If frames_chunk_size is not specified or greater than S, process all frames at once
+        # 如果未指定frames_chunk_size或大于S，则一次处理所有帧
         if frames_chunk_size is None or frames_chunk_size >= S:
             return self._forward_impl(aggregated_tokens_list, images, patch_start_idx)
 
-        # Otherwise, process frames in chunks to manage memory usage
+        # 否则，分块处理帧以管理内存使用
         assert frames_chunk_size > 0
 
-        # Process frames in batches
+        # 批量处理帧
         all_preds = []
         all_conf = []
 
         for frames_start_idx in range(0, S, frames_chunk_size):
             frames_end_idx = min(frames_start_idx + frames_chunk_size, S)
 
-            # Process batch of frames
+            # 处理帧批次
             if self.feature_only:
                 chunk_output = self._forward_impl(
                     aggregated_tokens_list, images, patch_start_idx, frames_start_idx, frames_end_idx
@@ -163,7 +163,7 @@ class DPTHead(nn.Module):
                 all_preds.append(chunk_preds)
                 all_conf.append(chunk_conf)
 
-        # Concatenate results along the sequence dimension
+        # 沿序列维度连接结果
         if self.feature_only:
             return torch.cat(all_preds, dim=1)
         else:
@@ -178,19 +178,19 @@ class DPTHead(nn.Module):
         frames_end_idx: int = None,
     ) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
         """
-        Implementation of the forward pass through the DPT head.
+        通过DPT头的前向传播实现。
 
-        This method processes a specific chunk of frames from the sequence.
+        该方法处理序列中特定的帧块。
 
-        Args:
-            aggregated_tokens_list (List[Tensor]): List of token tensors from different transformer layers.
-            images (Tensor): Input images with shape [B, S, 3, H, W].
-            patch_start_idx (int): Starting index for patch tokens.
-            frames_start_idx (int, optional): Starting index for frames to process.
-            frames_end_idx (int, optional): Ending index for frames to process.
+        参数：
+            aggregated_tokens_list (List[Tensor]): 来自不同transformer层的令牌张量列表。
+            images (Tensor): 输入图像，形状为[B, S, 3, H, W]。
+            patch_start_idx (int): patch令牌的起始索引。
+            frames_start_idx (int, optional): 要处理的帧的起始索引。
+            frames_end_idx (int, optional): 要处理的帧的结束索引。
 
-        Returns:
-            Tensor or Tuple[Tensor, Tensor]: Feature maps or (predictions, confidence).
+        返回：
+            Tensor或Tuple[Tensor, Tensor]：特征图或(预测，置信度)。
         """
         if frames_start_idx is not None and frames_end_idx is not None:
             images = images[:, frames_start_idx:frames_end_idx].contiguous()
@@ -205,7 +205,7 @@ class DPTHead(nn.Module):
         for layer_idx in self.intermediate_layer_idx:
             x = aggregated_tokens_list[layer_idx][:, :, patch_start_idx:]
 
-            # Select frames if processing a chunk
+            # 如果处理块，则选择帧
             if frames_start_idx is not None and frames_end_idx is not None:
                 x = x[:, frames_start_idx:frames_end_idx]
 
@@ -223,9 +223,9 @@ class DPTHead(nn.Module):
             out.append(x)
             dpt_idx += 1
 
-        # Fuse features from multiple layers.
+        # 融合来自多个层的特征。
         out = self.scratch_forward(out)
-        # Interpolate fused output to match target image resolution.
+        # 插值融合输出以匹配目标图像分辨率。
         out = custom_interpolate(
             out,
             (int(patch_h * self.patch_size / self.down_ratio), int(patch_w * self.patch_size / self.down_ratio)),
@@ -248,7 +248,7 @@ class DPTHead(nn.Module):
 
     def _apply_pos_embed(self, x: torch.Tensor, W: int, H: int, ratio: float = 0.1) -> torch.Tensor:
         """
-        Apply positional embedding to tensor x.
+        对张量x应用位置嵌入。
         """
         patch_w = x.shape[-1]
         patch_h = x.shape[-2]
@@ -260,13 +260,13 @@ class DPTHead(nn.Module):
 
     def scratch_forward(self, features: List[torch.Tensor]) -> torch.Tensor:
         """
-        Forward pass through the fusion blocks.
+        通过融合块的前向传播。
 
-        Args:
-            features (List[Tensor]): List of feature maps from different layers.
+        参数：
+            features (List[Tensor]): 来自不同层的特征图列表。
 
-        Returns:
-            Tensor: Fused feature map.
+        返回：
+            Tensor: 融合的特征图。
         """
         layer_1, layer_2, layer_3, layer_4 = features
 
@@ -292,7 +292,7 @@ class DPTHead(nn.Module):
 
 
 ################################################################################
-# Modules
+# 模块
 ################################################################################
 
 
@@ -342,13 +342,13 @@ def _make_scratch(in_shape: List[int], out_shape: int, groups: int = 1, expand: 
 
 
 class ResidualConvUnit(nn.Module):
-    """Residual convolution module."""
+    """残差卷积模块。"""
 
     def __init__(self, features, activation, bn, groups=1):
-        """Init.
+        """初始化。
 
-        Args:
-            features (int): number of features
+        参数：
+            features (int): 特征数量
         """
         super().__init__()
 
@@ -364,13 +364,13 @@ class ResidualConvUnit(nn.Module):
         self.skip_add = nn.quantized.FloatFunctional()
 
     def forward(self, x):
-        """Forward pass.
+        """前向传播。
 
-        Args:
-            x (tensor): input
+        参数：
+            x (tensor): 输入
 
-        Returns:
-            tensor: output
+        返回：
+            tensor: 输出
         """
 
         out = self.activation(x)
@@ -387,7 +387,7 @@ class ResidualConvUnit(nn.Module):
 
 
 class FeatureFusionBlock(nn.Module):
-    """Feature fusion block."""
+    """特征融合块。"""
 
     def __init__(
         self,
@@ -401,10 +401,10 @@ class FeatureFusionBlock(nn.Module):
         has_residual=True,
         groups=1,
     ):
-        """Init.
+        """初始化。
 
-        Args:
-            features (int): number of features
+        参数：
+            features (int): 特征数量
         """
         super(FeatureFusionBlock, self).__init__()
 
@@ -430,10 +430,10 @@ class FeatureFusionBlock(nn.Module):
         self.size = size
 
     def forward(self, *xs, size=None):
-        """Forward pass.
+        """前向传播。
 
-        Returns:
-            tensor: output
+        返回：
+            tensor: 输出
         """
         output = xs[0]
 
@@ -464,7 +464,7 @@ def custom_interpolate(
     align_corners: bool = True,
 ) -> torch.Tensor:
     """
-    Custom interpolate to avoid INT_MAX issues in nn.functional.interpolate.
+    自定义插值以避免nn.functional.interpolate中的INT_MAX问题。
     """
     if size is None:
         size = (int(x.shape[-2] * scale_factor), int(x.shape[-1] * scale_factor))

@@ -40,15 +40,15 @@ XFORMERS_ENABLED = os.environ.get("XFORMERS_DISABLED") is None
 #         from xformers.ops import SwiGLU
 
 #         XFORMERS_AVAILABLE = True
-#         warnings.warn("xFormers is available (SwiGLU)")
+#         warnings.warn("xFormers可用 (SwiGLU)")
 #     else:
-#         warnings.warn("xFormers is disabled (SwiGLU)")
+#         warnings.warn("xFormers已禁用 (SwiGLU)")
 #         raise ImportError
 # except ImportError:
 SwiGLU = SwiGLUFFN
 XFORMERS_AVAILABLE = False
 
-# warnings.warn("xFormers is not available (SwiGLU)")
+# warnings.warn("xFormers不可用 (SwiGLU)")
 
 
 class SwiGLUFFNFused(SwiGLU):

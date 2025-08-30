@@ -9,46 +9,46 @@ from .rotation import quat_to_mat, mat_to_quat
 
 
 def extri_intri_to_pose_encoding(
-    extrinsics, intrinsics, image_size_hw=None, pose_encoding_type="absT_quaR_FoV"  # e.g., (256, 512)
+    extrinsics, intrinsics, image_size_hw=None, pose_encoding_type="absT_quaR_FoV"  # 例如，(256, 512)
 ):
-    """Convert camera extrinsics and intrinsics to a compact pose encoding.
+    """将相机外参和内参转换为紧凑的位姿编码。
 
-    This function transforms camera parameters into a unified pose encoding format,
-    which can be used for various downstream tasks like pose prediction or representation.
+    此函数将相机参数转换为统一的位姿编码格式，
+    可用于各种下游任务，如位姿预测或表示。
 
-    Args:
-        extrinsics (torch.Tensor): Camera extrinsic parameters with shape BxSx3x4,
-            where B is batch size and S is sequence length.
-            In OpenCV coordinate system (x-right, y-down, z-forward), representing camera from world transformation.
-            The format is [R|t] where R is a 3x3 rotation matrix and t is a 3x1 translation vector.
-        intrinsics (torch.Tensor): Camera intrinsic parameters with shape BxSx3x3.
-            Defined in pixels, with format:
+    参数:
+        extrinsics (torch.Tensor): 相机外参参数，形状为 BxSx3x4，
+            其中B是批量大小，S是序列长度。
+            在OpenCV坐标系中（x-右，y-下，z-前），表示从世界到相机的变换。
+            格式为[R|t]，其中R是3x3旋转矩阵，t是3x1平移向量。
+        intrinsics (torch.Tensor): 相机内参参数，形状为 BxSx3x3。
+            以像素为单位定义，格式为：
             [[fx, 0, cx],
              [0, fy, cy],
              [0,  0,  1]]
-            where fx, fy are focal lengths and (cx, cy) is the principal point
-        image_size_hw (tuple): Tuple of (height, width) of the image in pixels.
-            Required for computing field of view values. For example: (256, 512).
-        pose_encoding_type (str): Type of pose encoding to use. Currently only
-            supports "absT_quaR_FoV" (absolute translation, quaternion rotation, field of view).
+            其中fx、fy是焦距，(cx, cy)是主点
+        image_size_hw (tuple): 图像的(高度, 宽度)元组，以像素为单位。
+            计算视场值所需。例如：(256, 512)。
+        pose_encoding_type (str): 要使用的位姿编码类型。目前仅
+            支持"absT_quaR_FoV"（绝对平移、四元数旋转、视场）。
 
-    Returns:
-        torch.Tensor: Encoded camera pose parameters with shape BxSx9.
-            For "absT_quaR_FoV" type, the 9 dimensions are:
-            - [:3] = absolute translation vector T (3D)
-            - [3:7] = rotation as quaternion quat (4D)
-            - [7:] = field of view (2D)
+    返回:
+        torch.Tensor: 编码的相机位姿参数，形状为 BxSx9。
+            对于"absT_quaR_FoV"类型，9个维度为：
+            - [:3] = 绝对平移向量T (3D)
+            - [3:7] = 四元数旋转quat (4D)
+            - [7:] = 视场 (2D)
     """
 
-    # extrinsics: BxSx3x4
-    # intrinsics: BxSx3x3
+    # 外参: BxSx3x4
+    # 内参: BxSx3x3
 
     if pose_encoding_type == "absT_quaR_FoV":
         R = extrinsics[:, :, :3, :3]  # BxSx3x3
         T = extrinsics[:, :, :3, 3]  # BxSx3
 
         quat = mat_to_quat(R)
-        # Note the order of h and w here
+        # 注意这里h和w的顺序
         H, W = image_size_hw
         fov_h = 2 * torch.atan((H / 2) / intrinsics[..., 1, 1])
         fov_w = 2 * torch.atan((W / 2) / intrinsics[..., 0, 0])
@@ -60,41 +60,41 @@ def extri_intri_to_pose_encoding(
 
 
 def pose_encoding_to_extri_intri(
-    pose_encoding, image_size_hw=None, pose_encoding_type="absT_quaR_FoV", build_intrinsics=True  # e.g., (256, 512)
+    pose_encoding, image_size_hw=None, pose_encoding_type="absT_quaR_FoV", build_intrinsics=True  # 例如，(256, 512)
 ):
-    """Convert a pose encoding back to camera extrinsics and intrinsics.
+    """将位姿编码转换回相机外参和内参。
 
-    This function performs the inverse operation of extri_intri_to_pose_encoding,
-    reconstructing the full camera parameters from the compact encoding.
+    此函数执行extri_intri_to_pose_encoding的逆操作，
+    从紧凑编码重建完整的相机参数。
 
-    Args:
-        pose_encoding (torch.Tensor): Encoded camera pose parameters with shape BxSx9,
-            where B is batch size and S is sequence length.
-            For "absT_quaR_FoV" type, the 9 dimensions are:
-            - [:3] = absolute translation vector T (3D)
-            - [3:7] = rotation as quaternion quat (4D)
-            - [7:] = field of view (2D)
-        image_size_hw (tuple): Tuple of (height, width) of the image in pixels.
-            Required for reconstructing intrinsics from field of view values.
-            For example: (256, 512).
-        pose_encoding_type (str): Type of pose encoding used. Currently only
-            supports "absT_quaR_FoV" (absolute translation, quaternion rotation, field of view).
-        build_intrinsics (bool): Whether to reconstruct the intrinsics matrix.
-            If False, only extrinsics are returned and intrinsics will be None.
+    参数:
+        pose_encoding (torch.Tensor): 编码的相机位姿参数，形状为 BxSx9，
+            其中B是批量大小，S是序列长度。
+            对于"absT_quaR_FoV"类型，9个维度为：
+            - [:3] = 绝对平移向量T (3D)
+            - [3:7] = 四元数旋转quat (4D)
+            - [7:] = 视场 (2D)
+        image_size_hw (tuple): 图像的(高度, 宽度)元组，以像素为单位。
+            从视场值重建内参所需。
+            例如：(256, 512)。
+        pose_encoding_type (str): 使用的位姿编码类型。目前仅
+            支持"absT_quaR_FoV"（绝对平移、四元数旋转、视场）。
+        build_intrinsics (bool): 是否重建内参矩阵。
+            如果为False，则仅返回外参，内参将为None。
 
-    Returns:
+    返回:
         tuple: (extrinsics, intrinsics)
-            - extrinsics (torch.Tensor): Camera extrinsic parameters with shape BxSx3x4.
-              In OpenCV coordinate system (x-right, y-down, z-forward), representing camera from world
-              transformation. The format is [R|t] where R is a 3x3 rotation matrix and t is
-              a 3x1 translation vector.
-            - intrinsics (torch.Tensor or None): Camera intrinsic parameters with shape BxSx3x3,
-              or None if build_intrinsics is False. Defined in pixels, with format:
+            - extrinsics (torch.Tensor): 相机外参参数，形状为 BxSx3x4。
+              在OpenCV坐标系中（x-右，y-下，z-前），表示从世界到相机
+              的变换。格式为[R|t]，其中R是3x3旋转矩阵，t是
+              3x1平移向量。
+            - intrinsics (torch.Tensor 或 None): 相机内参参数，形状为 BxSx3x3，
+              如果build_intrinsics为False则为None。以像素为单位定义，格式为：
               [[fx, 0, cx],
                [0, fy, cy],
                [0,  0,  1]]
-              where fx, fy are focal lengths and (cx, cy) is the principal point,
-              assumed to be at the center of the image (W/2, H/2).
+              其中fx、fy是焦距，(cx, cy)是主点，
+              假设在图像中心(W/2, H/2)。
     """
 
     intrinsics = None
@@ -117,7 +117,7 @@ def pose_encoding_to_extri_intri(
             intrinsics[..., 1, 1] = fy
             intrinsics[..., 0, 2] = W / 2
             intrinsics[..., 1, 2] = H / 2
-            intrinsics[..., 2, 2] = 1.0  # Set the homogeneous coordinate to 1
+            intrinsics[..., 2, 2] = 1.0  # 将齐次坐标设置为1
     else:
         raise NotImplementedError
 

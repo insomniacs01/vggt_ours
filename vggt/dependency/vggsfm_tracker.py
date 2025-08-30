@@ -26,23 +26,23 @@ class TrackerPredictor(nn.Module):
     def __init__(self, **extra_args):
         super(TrackerPredictor, self).__init__()
         """
-        Initializes the tracker predictor.
+        初始化跟踪器预测器。
 
-        Both coarse_predictor and fine_predictor are constructed as a BaseTrackerPredictor,
-        check track_modules/base_track_predictor.py
+        coarse_predictor和fine_predictor都构建为BaseTrackerPredictor，
+        查看track_modules/base_track_predictor.py
 
-        Both coarse_fnet and fine_fnet are constructed as a 2D CNN network
-        check track_modules/blocks.py for BasicEncoder and ShallowEncoder
+        coarse_fnet和fine_fnet都构建为2D CNN网络
+        查看track_modules/blocks.py中的BasicEncoder和ShallowEncoder
         """
-        # Define coarse predictor configuration
+        # 定义粗略预测器配置
         coarse_stride = 4
         self.coarse_down_ratio = 2
 
-        # Create networks directly instead of using instantiate
+        # 直接创建网络而不使用instantiate
         self.coarse_fnet = BasicEncoder(stride=coarse_stride)
         self.coarse_predictor = BaseTrackerPredictor(stride=coarse_stride)
 
-        # Create fine predictor with stride = 1
+        # 创建步长为1的精细预测器
         self.fine_fnet = ShallowEncoder(stride=1)
         self.fine_predictor = BaseTrackerPredictor(
             stride=1,
@@ -59,16 +59,16 @@ class TrackerPredictor(nn.Module):
         self, images, query_points, fmaps=None, coarse_iters=6, inference=True, fine_tracking=True, fine_chunk=40960
     ):
         """
-        Args:
-            images (torch.Tensor): Images as RGB, in the range of [0, 1], with a shape of B x S x 3 x H x W.
-            query_points (torch.Tensor): 2D xy of query points, relative to top left, with a shape of B x N x 2.
-            fmaps (torch.Tensor, optional): Precomputed feature maps. Defaults to None.
-            coarse_iters (int, optional): Number of iterations for coarse prediction. Defaults to 6.
-            inference (bool, optional): Whether to perform inference. Defaults to True.
-            fine_tracking (bool, optional): Whether to perform fine tracking. Defaults to True.
+        参数:
+            images (torch.Tensor): RGB图像，范围[0, 1]，形状为B x S x 3 x H x W。
+            query_points (torch.Tensor): 查询点的2D xy坐标，相对于左上角，形状为B x N x 2。
+            fmaps (torch.Tensor, optional): 预计算的特征图。默认为None。
+            coarse_iters (int, optional): 粗略预测的迭代次数。默认为6。
+            inference (bool, optional): 是否执行推理。默认为True。
+            fine_tracking (bool, optional): 是否执行精细跟踪。默认为True。
 
-        Returns:
-            tuple: A tuple containing fine_pred_track, coarse_pred_track, pred_vis, and pred_score.
+        返回:
+            tuple: 包含fine_pred_track、coarse_pred_track、pred_vis和pred_score的元组。
         """
 
         if fmaps is None:
@@ -80,7 +80,7 @@ class TrackerPredictor(nn.Module):
             if inference:
                 torch.cuda.empty_cache()
 
-        # Coarse prediction
+        # 粗略预测
         coarse_pred_track_lists, pred_vis = self.coarse_predictor(
             query_points=query_points, fmaps=fmaps, iters=coarse_iters, down_ratio=self.coarse_down_ratio
         )
@@ -90,7 +90,7 @@ class TrackerPredictor(nn.Module):
             torch.cuda.empty_cache()
 
         if fine_tracking:
-            # Refine the coarse prediction
+            # 细化粗略预测
             fine_pred_track, pred_score = refine_track(
                 images, self.fine_fnet, self.fine_predictor, coarse_pred_track, compute_score=False, chunk=fine_chunk
             )
@@ -105,16 +105,16 @@ class TrackerPredictor(nn.Module):
 
     def process_images_to_fmaps(self, images):
         """
-        This function processes images for inference.
+        此函数处理图像以进行推理。
 
-        Args:
-            images (torch.Tensor): The images to be processed with shape S x 3 x H x W.
+        参数:
+            images (torch.Tensor): 要处理的图像，形状为S x 3 x H x W。
 
-        Returns:
-            torch.Tensor: The processed feature maps.
+        返回:
+            torch.Tensor: 处理后的特征图。
         """
         if self.coarse_down_ratio > 1:
-            # whether or not scale down the input images to save memory
+            # 是否缩小输入图像以节省内存
             fmaps = self.coarse_fnet(
                 F.interpolate(images, scale_factor=1 / self.coarse_down_ratio, mode="bilinear", align_corners=True)
             )

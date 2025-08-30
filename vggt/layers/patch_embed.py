@@ -3,7 +3,7 @@
 # This source code is licensed under the Apache License, Version 2.0
 # found in the LICENSE file in the root directory of this source tree.
 
-# References:
+# 参考资料：
 #   https://github.com/facebookresearch/dino/blob/master/vision_transformer.py
 #   https://github.com/rwightman/pytorch-image-models/tree/master/timm/layers/patch_embed.py
 
@@ -24,14 +24,14 @@ def make_2tuple(x):
 
 class PatchEmbed(nn.Module):
     """
-    2D image to patch embedding: (B,C,H,W) -> (B,N,D)
+    2D图像到patch嵌入：(B,C,H,W) -> (B,N,D)
 
-    Args:
-        img_size: Image size.
-        patch_size: Patch token size.
-        in_chans: Number of input image channels.
-        embed_dim: Number of linear projection output channels.
-        norm_layer: Normalization layer.
+    参数：
+        img_size: 图像尺寸。
+        patch_size: Patch令牌尺寸。
+        in_chans: 输入图像通道数。
+        embed_dim: 线性投影输出通道数。
+        norm_layer: 归一化层。
     """
 
     def __init__(
@@ -66,8 +66,8 @@ class PatchEmbed(nn.Module):
         _, _, H, W = x.shape
         patch_H, patch_W = self.patch_size
 
-        assert H % patch_H == 0, f"Input image height {H} is not a multiple of patch height {patch_H}"
-        assert W % patch_W == 0, f"Input image width {W} is not a multiple of patch width: {patch_W}"
+        assert H % patch_H == 0, f"输入图像高度 {H} 不是patch高度 {patch_H} 的倍数"
+        assert W % patch_W == 0, f"输入图像宽度 {W} 不是patch宽度 {patch_W} 的倍数"
 
         x = self.proj(x)  # B C H W
         H, W = x.size(2), x.size(3)

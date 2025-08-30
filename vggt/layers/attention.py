@@ -3,7 +3,7 @@
 # This source code is licensed under the Apache License, Version 2.0
 # found in the LICENSE file in the root directory of this source tree.
 
-# References:
+# 参考：
 #   https://github.com/facebookresearch/dino/blob/master/vision_transformer.py
 #   https://github.com/rwightman/pytorch-image-models/tree/master/timm/models/vision_transformer.py
 
@@ -29,11 +29,11 @@ class Attention(nn.Module):
         proj_drop: float = 0.0,
         norm_layer: nn.Module = nn.LayerNorm,
         qk_norm: bool = False,
-        fused_attn: bool = True,  # use F.scaled_dot_product_attention or not
+        fused_attn: bool = True,  # 是否使用 F.scaled_dot_product_attention
         rope=None,
     ) -> None:
         super().__init__()
-        assert dim % num_heads == 0, "dim should be divisible by num_heads"
+        assert dim % num_heads == 0, "dim应该可被num_heads整除"
         self.num_heads = num_heads
         self.head_dim = dim // num_heads
         self.scale = self.head_dim**-0.5
@@ -77,7 +77,7 @@ class MemEffAttention(Attention):
         assert pos is None
         if not XFORMERS_AVAILABLE:
             if attn_bias is not None:
-                raise AssertionError("xFormers is required for using nested tensors")
+                raise AssertionError("使用嵌套张量需要xFormers")
             return super().forward(x)
 
         B, N, C = x.shape

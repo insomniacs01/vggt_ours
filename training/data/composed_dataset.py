@@ -40,8 +40,20 @@ class ComposedDataset(Dataset, ABC):
 
         # Instantiate each base dataset with common configuration
         for baseset_dict in dataset_configs:
-            baseset = instantiate(baseset_dict, common_conf=common_config)
-            base_dataset_list.append(baseset)
+            if 'dataset_type' in baseset_dict:
+                dataset_type = baseset_dict['dataset_type']
+
+                module_path, class_name = dataset_type.rsplit('.', 1)
+                module = __import__(module_path, fromlist=[class_name])
+                dataset_class = getattr(module, class_name)
+
+                init_params = {k: v for k, v in baseset_dict.items() if k != 'dataset_type'}
+
+                baseset = dataset_class(common_conf=common_config, **init_params)
+                base_dataset_list.append(baseset)
+            else:
+                baseset = instantiate(baseset_dict, common_conf=common_config)
+                base_dataset_list.append(baseset)
 
         # Use custom concatenation class that supports tuple indexing
         self.base_dataset = TupleConcatDataset(base_dataset_list, common_config)
@@ -102,6 +114,13 @@ class ComposedDataset(Dataset, ABC):
 
         # Retrieve the raw data batch from the appropriate base dataset
         batch = self.base_dataset[idx_tuple]
+        if idx_tuple[0] == 0:
+            print(f"[DEBUG Composed] Received from base_dataset:")
+            if 'gt_boxes' in batch:
+                print(f"  gt_boxes type: {type(batch['gt_boxes'])}")
+                if hasattr(batch['gt_boxes'], 'shape'):
+                    print(f"  gt_boxes shape: {batch['gt_boxes'].shape}")
+
         seq_name = batch["seq_name"]
 
         # --- Data Conversion and Preparation ---
@@ -181,6 +200,10 @@ class ComposedDataset(Dataset, ABC):
             sample["track_vis_mask"] = track_vis_mask
             sample["track_positive_mask"] = track_positive_mask
 
+        if 'gt_boxes' in batch:
+            sample['gt_boxes'] = batch['gt_boxes']
+        if 'gt_classes' in batch:
+            sample['gt_classes'] = batch['gt_classes']
         return sample
 
 

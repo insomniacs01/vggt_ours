@@ -13,34 +13,34 @@ def img_from_cam_np(
     intrinsics: np.ndarray, points_cam: np.ndarray, extra_params: np.ndarray | None = None, default: float = 0.0
 ) -> np.ndarray:
     """
-    Apply intrinsics (and optional radial distortion) to camera-space points.
+    对相机空间点应用内参（和可选的径向畸变）。
 
-    Args
+    参数
     ----
-    intrinsics  : (B,3,3) camera matrix K.
-    points_cam  : (B,3,N) homogeneous camera coords  (x, y, z)ᵀ.
-    extra_params: (B, N) or (B, k) distortion params (k = 1,2,4) or None.
-    default     : value used for np.nan replacement.
+    intrinsics  : (B,3,3) 相机矩阵K。
+    points_cam  : (B,3,N) 齐次相机坐标 (x, y, z)ᵀ。
+    extra_params: (B, N) 或 (B, k) 畸变参数 (k = 1,2,4) 或 None。
+    default     : 用于np.nan替换的值。
 
-    Returns
+    返回
     -------
-    points2D : (B,N,2) pixel coordinates.
+    points2D : (B,N,2) 像素坐标。
     """
-    # 1. perspective divide  ───────────────────────────────────────
+    # 1. 透视除法 ───────────────────────────────────────
     z = points_cam[:, 2:3, :]  # (B,1,N)
     points_cam_norm = points_cam / z  # (B,3,N)
     uv = points_cam_norm[:, :2, :]  # (B,2,N)
 
-    # 2. optional distortion ──────────────────────────────────────
+    # 2. 可选畸变 ──────────────────────────────────────
     if extra_params is not None:
         uu, vv = apply_distortion(extra_params, uv[:, 0], uv[:, 1])
         uv = np.stack([uu, vv], axis=1)  # (B,2,N)
 
-    # 3. homogeneous coords then K multiplication ─────────────────
+    # 3. 齐次坐标然后K矩阵乘法 ─────────────────
     ones = np.ones_like(uv[:, :1, :])  # (B,1,N)
     points_cam_h = np.concatenate([uv, ones], axis=1)  # (B,3,N)
 
-    # batched mat-mul: K · [u v 1]ᵀ
+    # 批量矩阵乘法: K · [u v 1]ᵀ
     points2D_h = np.einsum("bij,bjk->bik", intrinsics, points_cam_h)  # (B,3,N)
     points2D = np.nan_to_num(points2D_h[:, :2, :], nan=default)  # (B,2,N)
 
@@ -57,34 +57,34 @@ def project_3D_points_np(
     only_points_cam: bool = False,
 ):
     """
-    NumPy clone of ``project_3D_points``.
+    ``project_3D_points``的NumPy克隆版本。
 
-    Parameters
+    参数
     ----------
-    points3D          : (N,3) world-space points.
-    extrinsics        : (B,3,4)  [R|t] matrix for each of B cameras.
-    intrinsics        : (B,3,3)  K matrix (optional if you only need cam-space).
-    extra_params      : (B,k) or (B,N) distortion parameters (k ∈ {1,2,4}) or None.
-    default           : value used to replace NaNs.
-    only_points_cam   : if True, skip the projection and return points_cam with points2D as None.
+    points3D          : (N,3) 世界空间点。
+    extrinsics        : (B,3,4) 每个B相机的[R|t]矩阵。
+    intrinsics        : (B,3,3) K矩阵（如果只需要相机空间则可选）。
+    extra_params      : (B,k) 或 (B,N) 畸变参数 (k ∈ {1,2,4}) 或 None。
+    default           : 用于替换NaN的值。
+    only_points_cam   : 如果为True，跳过投影并返回points_cam，points2D返回None。
 
-    Returns
+    返回
     -------
-    (points2D, points_cam) : A tuple where points2D is (B,N,2) pixel coords or None if only_points_cam=True,
-                           and points_cam is (B,3,N) camera-space coordinates.
+    (points2D, points_cam) : 一个元组，其中points2D是(B,N,2)像素坐标，如果only_points_cam=True则为None，
+                           points_cam是(B,3,N)相机空间坐标。
     """
-    # ----- 0. prep sizes -----------------------------------------------------
-    N = points3D.shape[0]  # #points
-    B = extrinsics.shape[0]  # #cameras
+    # ----- 0. 准备尺寸 -----------------------------------------------------
+    N = points3D.shape[0]  # 点数
+    B = extrinsics.shape[0]  # 相机数
 
-    # ----- 1. world → homogeneous -------------------------------------------
+    # ----- 1. 世界坐标 → 齐次坐标 -------------------------------------------
     w_h = np.ones((N, 1), dtype=points3D.dtype)
     points3D_h = np.concatenate([points3D, w_h], axis=1)  # (N,4)
 
-    # broadcast to every camera (no actual copying with np.broadcast_to) ------
+    # 广播到每个相机（使用np.broadcast_to不会实际复制） ------
     points3D_h_B = np.broadcast_to(points3D_h, (B, N, 4))  # (B,N,4)
 
-    # ----- 2. apply extrinsics  (camera frame) ------------------------------
+    # ----- 2. 应用外参（相机框架） ------------------------------
     # X_cam = E · X_hom
     # einsum:  E_(b i j)  ·  X_(b n j)  →  (b n i)
     points_cam = np.einsum("bij,bnj->bni", extrinsics, points3D_h_B)  # (B,N,3)
@@ -93,9 +93,9 @@ def project_3D_points_np(
     if only_points_cam:
         return None, points_cam
 
-    # ----- 3. intrinsics + distortion ---------------------------------------
+    # ----- 3. 内参 + 畸变 ---------------------------------------
     if intrinsics is None:
-        raise ValueError("`intrinsics` must be provided unless only_points_cam=True")
+        raise ValueError("除非only_points_cam=True，否则必须提供`intrinsics`")
 
     points2D = img_from_cam_np(intrinsics, points_cam, extra_params=extra_params, default=default)
 
@@ -104,34 +104,34 @@ def project_3D_points_np(
 
 def project_3D_points(points3D, extrinsics, intrinsics=None, extra_params=None, default=0, only_points_cam=False):
     """
-    Transforms 3D points to 2D using extrinsic and intrinsic parameters.
-    Args:
-        points3D (torch.Tensor): 3D points of shape Px3.
-        extrinsics (torch.Tensor): Extrinsic parameters of shape Bx3x4.
-        intrinsics (torch.Tensor): Intrinsic parameters of shape Bx3x3.
-        extra_params (torch.Tensor): Extra parameters of shape BxN, used for radial distortion.
-        default (float): Default value to replace NaNs.
-        only_points_cam (bool): If True, skip the projection and return points2D as None.
+    使用外参和内参将3D点转换为2D。
+    参数:
+        points3D (torch.Tensor): 形状为Px3的3D点。
+        extrinsics (torch.Tensor): 形状为Bx3x4的外参。
+        intrinsics (torch.Tensor): 形状为Bx3x3的内参。
+        extra_params (torch.Tensor): 形状为BxN的额外参数，用于径向畸变。
+        default (float): 用于替换NaN的默认值。
+        only_points_cam (bool): 如果为True，跳过投影并返回points2D为None。
 
-    Returns:
-        tuple: (points2D, points_cam) where points2D is of shape BxNx2 or None if only_points_cam=True,
-               and points_cam is of shape Bx3xN.
+    返回:
+        tuple: (points2D, points_cam) 其中points2D的形状为BxNx2，如果only_points_cam=True则为None，
+               points_cam的形状为Bx3xN。
     """
     with torch.cuda.amp.autocast(dtype=torch.double):
-        N = points3D.shape[0]  # Number of points
-        B = extrinsics.shape[0]  # Batch size, i.e., number of cameras
+        N = points3D.shape[0]  # 点的数量
+        B = extrinsics.shape[0]  # 批大小，即相机数量
         points3D_homogeneous = torch.cat([points3D, torch.ones_like(points3D[..., 0:1])], dim=1)  # Nx4
-        # Reshape for batch processing
+        # 为批处理重塑
         points3D_homogeneous = points3D_homogeneous.unsqueeze(0).expand(B, -1, -1)  # BxNx4
 
-        # Step 1: Apply extrinsic parameters
-        # Transform 3D points to camera coordinate system for all cameras
+        # 步骤1：应用外参
+        # 将3D点转换到所有相机的相机坐标系
         points_cam = torch.bmm(extrinsics, points3D_homogeneous.transpose(-1, -2))
 
         if only_points_cam:
             return None, points_cam
 
-        # Step 2: Apply intrinsic parameters and (optional) distortion
+        # 步骤2：应用内参和（可选）畸变
         points2D = img_from_cam(intrinsics, points_cam, extra_params, default)
 
         return points2D, points_cam
@@ -139,44 +139,44 @@ def project_3D_points(points3D, extrinsics, intrinsics=None, extra_params=None, 
 
 def img_from_cam(intrinsics, points_cam, extra_params=None, default=0.0):
     """
-    Applies intrinsic parameters and optional distortion to the given 3D points.
+    对给定的3D点应用内参和可选畸变。
 
-    Args:
-        intrinsics (torch.Tensor): Intrinsic camera parameters of shape Bx3x3.
-        points_cam (torch.Tensor): 3D points in camera coordinates of shape Bx3xN.
-        extra_params (torch.Tensor, optional): Distortion parameters of shape BxN, where N can be 1, 2, or 4.
-        default (float, optional): Default value to replace NaNs in the output.
+    参数:
+        intrinsics (torch.Tensor): 形状为Bx3x3的相机内参。
+        points_cam (torch.Tensor): 形状为Bx3xN的相机坐标系中的3D点。
+        extra_params (torch.Tensor, optional): 形状为BxN的畸变参数，其中N可以是1、2或4。
+        default (float, optional): 用于替换输出中NaN的默认值。
 
-    Returns:
-        points2D (torch.Tensor): 2D points in pixel coordinates of shape BxNx2.
+    返回:
+        points2D (torch.Tensor): 形状为BxNx2的像素坐标中的2D点。
     """
 
-    # Normalize by the third coordinate (homogeneous division)
+    # 通过第三个坐标进行归一化（齐次除法）
     points_cam = points_cam / points_cam[:, 2:3, :]
-    # Extract uv
+    # 提取uv
     uv = points_cam[:, :2, :]
 
-    # Apply distortion if extra_params are provided
+    # 如果提供了extra_params则应用畸变
     if extra_params is not None:
         uu, vv = apply_distortion(extra_params, uv[:, 0], uv[:, 1])
         uv = torch.stack([uu, vv], dim=1)
 
-    # Prepare points_cam for batch matrix multiplication
+    # 为批量矩阵乘法准备points_cam
     points_cam_homo = torch.cat((uv, torch.ones_like(uv[:, :1, :])), dim=1)  # Bx3xN
-    # Apply intrinsic parameters using batch matrix multiplication
+    # 使用批量矩阵乘法应用内参
     points2D_homo = torch.bmm(intrinsics, points_cam_homo)  # Bx3xN
 
-    # Extract x and y coordinates
+    # 提取x和y坐标
     points2D = points2D_homo[:, :2, :]  # Bx2xN
 
-    # Replace NaNs with default value
+    # 用默认值替换NaN
     points2D = torch.nan_to_num(points2D, nan=default)
 
     return points2D.transpose(1, 2)  # BxNx2
 
 
 if __name__ == "__main__":
-    # Set up example input
+    # 设置示例输入
     B, N = 24, 10240
 
     for _ in range(100):
@@ -184,45 +184,45 @@ if __name__ == "__main__":
         extrinsics = np.random.rand(B, 3, 4).astype(np.float64)
         intrinsics = np.random.rand(B, 3, 3).astype(np.float64)
 
-        # Convert to torch tensors
+        # 转换为torch张量
         points3D_torch = torch.tensor(points3D)
         extrinsics_torch = torch.tensor(extrinsics)
         intrinsics_torch = torch.tensor(intrinsics)
 
-        # Run NumPy implementation
+        # 运行NumPy实现
         points2D_np, points_cam_np = project_3D_points_np(points3D, extrinsics, intrinsics)
 
-        # Run torch implementation
+        # 运行torch实现
         points2D_torch, points_cam_torch = project_3D_points(points3D_torch, extrinsics_torch, intrinsics_torch)
 
-        # Convert torch output to numpy
+        # 将torch输出转换为numpy
         points2D_torch_np = points2D_torch.detach().numpy()
         points_cam_torch_np = points_cam_torch.detach().numpy()
 
-        # Compute difference
+        # 计算差异
         diff = np.abs(points2D_np - points2D_torch_np)
-        print("Difference between NumPy and PyTorch implementations:")
+        print("NumPy和PyTorch实现之间的差异：")
         print(diff)
 
-        # Check max error
+        # 检查最大误差
         max_diff = np.max(diff)
-        print(f"Maximum difference: {max_diff}")
+        print(f"最大差异：{max_diff}")
 
         if np.allclose(points2D_np, points2D_torch_np, atol=1e-6):
-            print("Implementations match closely.")
+            print("实现匹配度很高。")
         else:
-            print("Significant differences detected.")
+            print("检测到显著差异。")
 
         if points_cam_np is not None:
             points_cam_diff = np.abs(points_cam_np - points_cam_torch_np)
-            print("Difference between NumPy and PyTorch camera-space coordinates:")
+            print("NumPy和PyTorch相机空间坐标之间的差异：")
             print(points_cam_diff)
 
-            # Check max error
+            # 检查最大误差
             max_cam_diff = np.max(points_cam_diff)
-            print(f"Maximum camera-space coordinate difference: {max_cam_diff}")
+            print(f"最大相机空间坐标差异：{max_cam_diff}")
 
             if np.allclose(points_cam_np, points_cam_torch_np, atol=1e-6):
-                print("Camera-space coordinates match closely.")
+                print("相机空间坐标匹配度很高。")
             else:
-                print("Significant differences detected in camera-space coordinates.")
+                print("在相机空间坐标中检测到显著差异。")

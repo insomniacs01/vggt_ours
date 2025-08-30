@@ -24,29 +24,29 @@ _RESNET_STD = [0.229, 0.224, 0.225]
 
 class Aggregator(nn.Module):
     """
-    The Aggregator applies alternating-attention over input frames,
-    as described in VGGT: Visual Geometry Grounded Transformer.
+    Aggregator应用交替注意力于输入帧，
+    如VGGT: Visual Geometry Grounded Transformer中所述。
 
-    Remember to set model.train() to enable gradient checkpointing to reduce memory usage.
+    记得设置model.train()以启用梯度检查点来减少内存使用。
 
-    Args:
-        img_size (int): Image size in pixels.
-        patch_size (int): Size of each patch for PatchEmbed.
-        embed_dim (int): Dimension of the token embeddings.
-        depth (int): Number of blocks.
-        num_heads (int): Number of attention heads.
-        mlp_ratio (float): Ratio of MLP hidden dim to embedding dim.
-        num_register_tokens (int): Number of register tokens.
-        block_fn (nn.Module): The block type used for attention (Block by default).
-        qkv_bias (bool): Whether to include bias in QKV projections.
-        proj_bias (bool): Whether to include bias in the output projection.
-        ffn_bias (bool): Whether to include bias in MLP layers.
-        patch_embed (str): Type of patch embed. e.g., "conv" or "dinov2_vitl14_reg".
-        aa_order (list[str]): The order of alternating attention, e.g. ["frame", "global"].
-        aa_block_size (int): How many blocks to group under each attention type before switching. If not necessary, set to 1.
-        qk_norm (bool): Whether to apply QK normalization.
-        rope_freq (int): Base frequency for rotary embedding. -1 to disable.
-        init_values (float): Init scale for layer scale.
+    参数:
+        img_size (int): 图像大小（像素）。
+        patch_size (int): PatchEmbed的每个补丁大小。
+        embed_dim (int): 令牌嵌入的维度。
+        depth (int): 块的数量。
+        num_heads (int): 注意力头的数量。
+        mlp_ratio (float): MLP隐藏维度与嵌入维度的比率。
+        num_register_tokens (int): 寄存器令牌的数量。
+        block_fn (nn.Module): 用于注意力的块类型（默认为Block）。
+        qkv_bias (bool): 是否在QKV投影中包含偏置。
+        proj_bias (bool): 是否在输出投影中包含偏置。
+        ffn_bias (bool): 是否在MLP层中包含偏置。
+        patch_embed (str): 补丁嵌入的类型。例如"conv"或"dinov2_vitl14_reg"。
+        aa_order (list[str]): 交替注意力的顺序，例如["frame", "global"]。
+        aa_block_size (int): 在切换之前将多少块分组在每个注意力类型下。如果不必要，设置为1。
+        qk_norm (bool): 是否应用QK归一化。
+        rope_freq (int): 旋转嵌入的基础频率。-1表示禁用。
+        init_values (float): 层缩放的初始缩放值。
     """
 
     def __init__(
@@ -73,7 +73,7 @@ class Aggregator(nn.Module):
 
         self.__build_patch_embed__(patch_embed, img_size, patch_size, num_register_tokens, embed_dim=embed_dim)
 
-        # Initialize rotary position embedding if frequency > 0
+        # 如果频率>0，初始化旋转位置嵌入
         self.rope = RotaryPositionEmbedding2D(frequency=rope_freq) if rope_freq > 0 else None
         self.position_getter = PositionGetter() if self.rope is not None else None
 
@@ -116,29 +116,29 @@ class Aggregator(nn.Module):
         self.patch_size = patch_size
         self.aa_block_size = aa_block_size
 
-        # Validate that depth is divisible by aa_block_size
+        # 验证depth是否可被aa_block_size整除
         if self.depth % self.aa_block_size != 0:
-            raise ValueError(f"depth ({depth}) must be divisible by aa_block_size ({aa_block_size})")
+            raise ValueError(f"depth ({depth}) 必须可被 aa_block_size ({aa_block_size}) 整除")
 
         self.aa_block_num = self.depth // self.aa_block_size
 
-        # Note: We have two camera tokens, one for the first frame and one for the rest
-        # The same applies for register tokens
+        # 注意：我们有两个相机令牌，一个用于第一帧，一个用于其余帧
+        # 寄存器令牌也是如此
         self.camera_token = nn.Parameter(torch.randn(1, 2, 1, embed_dim))
         self.register_token = nn.Parameter(torch.randn(1, 2, num_register_tokens, embed_dim))
 
-        # The patch tokens start after the camera and register tokens
+        # 补丁令牌从相机和寄存器令牌之后开始
         self.patch_start_idx = 1 + num_register_tokens
 
-        # Initialize parameters with small values
+        # 用小值初始化参数
         nn.init.normal_(self.camera_token, std=1e-6)
         nn.init.normal_(self.register_token, std=1e-6)
 
-        # Register normalization constants as buffers
+        # 将归一化常数注册为缓冲区
         for name, value in (("_resnet_mean", _RESNET_MEAN), ("_resnet_std", _RESNET_STD)):
             self.register_buffer(name, torch.FloatTensor(value).view(1, 1, 3, 1, 1), persistent=False)
 
-        self.use_reentrant = False # hardcoded to False
+        self.use_reentrant = False # 硬编码为False
 
     def __build_patch_embed__(
         self,
@@ -153,8 +153,8 @@ class Aggregator(nn.Module):
         embed_dim=1024,
     ):
         """
-        Build the patch embed layer. If 'conv', we use a
-        simple PatchEmbed conv layer. Otherwise, we use a vision transformer.
+        构建补丁嵌入层。如果是'conv'，我们使用
+        简单的PatchEmbed卷积层。否则，我们使用视觉变换器。
         """
 
         if "conv" in patch_embed:
@@ -177,30 +177,30 @@ class Aggregator(nn.Module):
                 init_values=init_values,
             )
 
-            # Disable gradient updates for mask token
+            # 禁用掩码令牌的梯度更新
             if hasattr(self.patch_embed, "mask_token"):
                 self.patch_embed.mask_token.requires_grad_(False)
 
     def forward(self, images: torch.Tensor) -> Tuple[List[torch.Tensor], int]:
         """
-        Args:
-            images (torch.Tensor): Input images with shape [B, S, 3, H, W], in range [0, 1].
-                B: batch size, S: sequence length, 3: RGB channels, H: height, W: width
+        参数:
+            images (torch.Tensor): 输入图像，形状为 [B, S, 3, H, W]，范围为 [0, 1]。
+                B: 批量大小, S: 序列长度, 3: RGB通道, H: 高度, W: 宽度
 
-        Returns:
+        返回:
             (list[torch.Tensor], int):
-                The list of outputs from the attention blocks,
-                and the patch_start_idx indicating where patch tokens begin.
+                注意力块的输出列表，
+                以及指示补丁令牌开始位置的patch_start_idx。
         """
         B, S, C_in, H, W = images.shape
 
         if C_in != 3:
-            raise ValueError(f"Expected 3 input channels, got {C_in}")
+            raise ValueError(f"期望3个输入通道，得到 {C_in}")
 
-        # Normalize images and reshape for patch embed
+        # 归一化图像并重塑以进行补丁嵌入
         images = (images - self._resnet_mean) / self._resnet_std
 
-        # Reshape to [B*S, C, H, W] for patch embedding
+        # 重塑为 [B*S, C, H, W] 以进行补丁嵌入
         images = images.view(B * S, C_in, H, W)
         patch_tokens = self.patch_embed(images)
 
@@ -209,11 +209,11 @@ class Aggregator(nn.Module):
 
         _, P, C = patch_tokens.shape
 
-        # Expand camera and register tokens to match batch size and sequence length
+        # 扩展相机和寄存器令牌以匹配批量大小和序列长度
         camera_token = slice_expand_and_flatten(self.camera_token, B, S)
         register_token = slice_expand_and_flatten(self.register_token, B, S)
 
-        # Concatenate special tokens with patch tokens
+        # 将特殊令牌与补丁令牌连接
         tokens = torch.cat([camera_token, register_token, patch_tokens], dim=1)
 
         pos = None
@@ -221,20 +221,20 @@ class Aggregator(nn.Module):
             pos = self.position_getter(B * S, H // self.patch_size, W // self.patch_size, device=images.device)
 
         if self.patch_start_idx > 0:
-            # do not use position embedding for special tokens (camera and register tokens)
-            # so set pos to 0 for the special tokens
+            # 不要为特殊令牌（相机和寄存器令牌）使用位置嵌入
+            # 所以将特殊令牌的pos设置为0
             pos = pos + 1
             pos_special = torch.zeros(B * S, self.patch_start_idx, 2).to(images.device).to(pos.dtype)
             pos = torch.cat([pos_special, pos], dim=1)
 
-        # update P because we added special tokens
+        # 更新P，因为我们添加了特殊令牌
         _, P, C = tokens.shape
 
         frame_idx = 0
         global_idx = 0
         output_list = []
 
-        for _ in range(self.aa_block_num):
+        for block_i in range(self.aa_block_num):
             for attn_type in self.aa_order:
                 if attn_type == "frame":
                     tokens, frame_idx, frame_intermediates = self._process_frame_attention(
@@ -245,10 +245,10 @@ class Aggregator(nn.Module):
                         tokens, B, S, P, C, global_idx, pos=pos
                     )
                 else:
-                    raise ValueError(f"Unknown attention type: {attn_type}")
+                    raise ValueError(f"未知的注意力类型: {attn_type}")
 
             for i in range(len(frame_intermediates)):
-                # concat frame and global intermediates, [B x S x P x 2C]
+                # 连接帧和全局中间结果，[B x S x P x 2C]
                 concat_inter = torch.cat([frame_intermediates[i], global_intermediates[i]], dim=-1)
                 output_list.append(concat_inter)
 
@@ -259,9 +259,9 @@ class Aggregator(nn.Module):
 
     def _process_frame_attention(self, tokens, B, S, P, C, frame_idx, pos=None):
         """
-        Process frame attention blocks. We keep tokens in shape (B*S, P, C).
+        处理帧注意力块。我们保持令牌形状为 (B*S, P, C)。
         """
-        # If needed, reshape tokens or positions:
+        # 如果需要，重塑令牌或位置：
         if tokens.shape != (B * S, P, C):
             tokens = tokens.view(B, S, P, C).view(B * S, P, C)
 
@@ -270,7 +270,7 @@ class Aggregator(nn.Module):
 
         intermediates = []
 
-        # by default, self.aa_block_size=1, which processes one block at a time
+        # 默认情况下，self.aa_block_size=1，一次处理一个块
         for _ in range(self.aa_block_size):
             if self.training:
                 tokens = checkpoint(self.frame_blocks[frame_idx], tokens, pos, use_reentrant=self.use_reentrant)
@@ -283,7 +283,7 @@ class Aggregator(nn.Module):
 
     def _process_global_attention(self, tokens, B, S, P, C, global_idx, pos=None):
         """
-        Process global attention blocks. We keep tokens in shape (B, S*P, C).
+        处理全局注意力块。我们保持令牌形状为 (B, S*P, C)。
         """
         if tokens.shape != (B, S * P, C):
             tokens = tokens.view(B, S, P, C).view(B, S * P, C)
@@ -293,7 +293,7 @@ class Aggregator(nn.Module):
 
         intermediates = []
 
-        # by default, self.aa_block_size=1, which processes one block at a time
+        # 默认情况下，self.aa_block_size=1，一次处理一个块
         for _ in range(self.aa_block_size):
             if self.training:
                 tokens = checkpoint(self.global_blocks[global_idx], tokens, pos, use_reentrant=self.use_reentrant)
@@ -307,25 +307,25 @@ class Aggregator(nn.Module):
 
 def slice_expand_and_flatten(token_tensor, B, S):
     """
-    Processes specialized tokens with shape (1, 2, X, C) for multi-frame processing:
-    1) Uses the first position (index=0) for the first frame only
-    2) Uses the second position (index=1) for all remaining frames (S-1 frames)
-    3) Expands both to match batch size B
-    4) Concatenates to form (B, S, X, C) where each sequence has 1 first-position token
-       followed by (S-1) second-position tokens
-    5) Flattens to (B*S, X, C) for processing
+    处理形状为 (1, 2, X, C) 的专用令牌以进行多帧处理：
+    1) 仅为第一帧使用第一个位置（索引=0）
+    2) 为所有剩余帧（S-1帧）使用第二个位置（索引=1）
+    3) 扩展两者以匹配批量大小B
+    4) 连接形成 (B, S, X, C)，其中每个序列有1个第一位置令牌
+       后跟(S-1)个第二位置令牌
+    5) 展平为 (B*S, X, C) 以进行处理
 
-    Returns:
-        torch.Tensor: Processed tokens with shape (B*S, X, C)
+    返回:
+        torch.Tensor: 处理后的令牌，形状为 (B*S, X, C)
     """
 
-    # Slice out the "query" tokens => shape (1, 1, ...)
+    # 切出"查询"令牌 => 形状 (1, 1, ...)
     query = token_tensor[:, 0:1, ...].expand(B, 1, *token_tensor.shape[2:])
-    # Slice out the "other" tokens => shape (1, S-1, ...)
+    # 切出"其他"令牌 => 形状 (1, S-1, ...)
     others = token_tensor[:, 1:, ...].expand(B, S - 1, *token_tensor.shape[2:])
-    # Concatenate => shape (B, S, ...)
+    # 连接 => 形状 (B, S, ...)
     combined = torch.cat([query, others], dim=1)
 
-    # Finally flatten => shape (B*S, ...)
+    # 最后展平 => 形状 (B*S, ...)
     combined = combined.view(B * S, *combined.shape[2:])
     return combined

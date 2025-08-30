@@ -22,48 +22,48 @@ def predict_tracks(
     complete_non_vis=True,
 ):
     """
-    Predict tracks for the given images and masks.
+    预测给定图像和掩码的轨迹。
 
-    TODO: support non-square images
-    TODO: support masks
+    待办：支持非正方形图像
+    待办：支持掩码
 
 
-    This function predicts the tracks for the given images and masks using the specified query method
-    and track predictor. It finds query points, and predicts the tracks, visibility, and scores for the query frames.
+    该函数使用指定的查询方法和轨迹预测器预测给定图像和掩码的轨迹。
+    它找到查询点，并预测查询帧的轨迹、可见性和分数。
 
-    Args:
-        images: Tensor of shape [S, 3, H, W] containing the input images.
-        conf: Tensor of shape [S, 1, H, W] containing the confidence scores. Default is None.
-        points_3d: Tensor containing 3D points. Default is None.
-        masks: Optional tensor of shape [S, 1, H, W] containing masks. Default is None.
-        max_query_pts: Maximum number of query points. Default is 2048.
-        query_frame_num: Number of query frames to use. Default is 5.
-        keypoint_extractor: Method for keypoint extraction. Default is "aliked+sp".
-        max_points_num: Maximum number of points to process at once. Default is 163840.
-        fine_tracking: Whether to use fine tracking. Default is True.
-        complete_non_vis: Whether to augment non-visible frames. Default is True.
+    参数:
+        images: 形状为[S, 3, H, W]的输入图像张量。
+        conf: 形状为[S, 1, H, W]的置信度分数张量。默认为None。
+        points_3d: 包含3D点的张量。默认为None。
+        masks: 形状为[S, 1, H, W]的可选掩码张量。默认为None。
+        max_query_pts: 最大查询点数。默认为2048。
+        query_frame_num: 要使用的查询帧数。默认为5。
+        keypoint_extractor: 关键点提取方法。默认为"aliked+sp"。
+        max_points_num: 一次处理的最大点数。默认为163840。
+        fine_tracking: 是否使用精细跟踪。默认为True。
+        complete_non_vis: 是否增强非可见帧。默认为True。
 
-    Returns:
-        pred_tracks: Numpy array containing the predicted tracks.
-        pred_vis_scores: Numpy array containing the visibility scores for the tracks.
-        pred_confs: Numpy array containing the confidence scores for the tracks.
-        pred_points_3d: Numpy array containing the 3D points for the tracks.
-        pred_colors: Numpy array containing the point colors for the tracks. (0, 255)
+    返回:
+        pred_tracks: 包含预测轨迹的Numpy数组。
+        pred_vis_scores: 包含轨迹可见性分数的Numpy数组。
+        pred_confs: 包含轨迹置信度分数的Numpy数组。
+        pred_points_3d: 包含轨迹3D点的Numpy数组。
+        pred_colors: 包含轨迹点颜色的Numpy数组。(0, 255)
     """
 
     device = images.device
     dtype = images.dtype
     tracker = build_vggsfm_tracker().to(device, dtype)
 
-    # Find query frames
+    # 查找查询帧
     query_frame_indexes = generate_rank_by_dino(images, query_frame_num=query_frame_num, device=device)
 
-    # Add the first image to the front if not already present
+    # 如果第一张图像不在前面，则将其添加到前面
     if 0 in query_frame_indexes:
         query_frame_indexes.remove(0)
     query_frame_indexes = [0, *query_frame_indexes]
 
-    # TODO: add the functionality to handle the masks
+    # 待办：添加处理掩码的功能
     keypoint_extractors = initialize_feature_extractors(
         max_query_pts, extractor_method=keypoint_extractor, device=device
     )
@@ -77,10 +77,10 @@ def predict_tracks(
     fmaps_for_tracker = tracker.process_images_to_fmaps(images)
 
     if fine_tracking:
-        print("For faster inference, consider disabling fine_tracking")
+        print("为了更快的推理，请考虑禁用fine_tracking")
 
     for query_index in query_frame_indexes:
-        print(f"Predicting tracks for query frame {query_index}")
+        print(f"正在预测查询帧 {query_index} 的轨迹")
         pred_track, pred_vis, pred_conf, pred_point_3d, pred_color = _forward_on_query(
             query_index,
             images,
@@ -145,26 +145,26 @@ def _forward_on_query(
     device,
 ):
     """
-    Process a single query frame for track prediction.
+    处理单个查询帧进行轨迹预测。
 
-    Args:
-        query_index: Index of the query frame
-        images: Tensor of shape [S, 3, H, W] containing the input images
-        conf: Confidence tensor
-        points_3d: 3D points tensor
-        fmaps_for_tracker: Feature maps for the tracker
-        keypoint_extractors: Initialized feature extractors
-        tracker: VGG-SFM tracker
-        max_points_num: Maximum number of points to process at once
-        fine_tracking: Whether to use fine tracking
-        device: Device to use for computation
+    参数:
+        query_index: 查询帧的索引
+        images: 形状为[S, 3, H, W]的输入图像张量
+        conf: 置信度张量
+        points_3d: 3D点张量
+        fmaps_for_tracker: 跟踪器的特征图
+        keypoint_extractors: 初始化的特征提取器
+        tracker: VGG-SFM跟踪器
+        max_points_num: 一次处理的最大点数
+        fine_tracking: 是否使用精细跟踪
+        device: 用于计算的设备
 
-    Returns:
-        pred_track: Predicted tracks
-        pred_vis: Visibility scores for the tracks
-        pred_conf: Confidence scores for the tracks
-        pred_point_3d: 3D points for the tracks
-        pred_color: Point colors for the tracks (0, 255)
+    返回:
+        pred_track: 预测的轨迹
+        pred_vis: 轨迹的可见性分数
+        pred_conf: 轨迹的置信度分数
+        pred_point_3d: 轨迹的3D点
+        pred_color: 轨迹的点颜色 (0, 255)
     """
     frame_num, _, height, width = images.shape
 
@@ -172,12 +172,12 @@ def _forward_on_query(
     query_points = extract_keypoints(query_image, keypoint_extractors, round_keypoints=False)
     query_points = query_points[:, torch.randperm(query_points.shape[1], device=device)]
 
-    # Extract the color at the keypoint locations
+    # 提取关键点位置的颜色
     query_points_long = query_points.squeeze(0).round().long()
     pred_color = images[query_index][:, query_points_long[:, 1], query_points_long[:, 0]]
     pred_color = (pred_color.permute(1, 0).cpu().numpy() * 255).astype(np.uint8)
 
-    # Query the confidence and points_3d at the keypoint locations
+    # 在关键点位置查询置信度和points_3d
     if (conf is not None) and (points_3d is not None):
         assert height == width
         assert conf.shape[-2] == conf.shape[-1]
@@ -190,11 +190,11 @@ def _forward_on_query(
         pred_conf = conf[query_index][query_points_scaled[:, 1], query_points_scaled[:, 0]]
         pred_point_3d = points_3d[query_index][query_points_scaled[:, 1], query_points_scaled[:, 0]]
 
-        # heuristic to remove low confidence points
-        # should I export this as an input parameter?
+        # 启发式地移除低置信度点
+        # 我应该将其导出为输入参数吗？
         valid_mask = pred_conf > 1.2
         if valid_mask.sum() > 512:
-            query_points = query_points[:, valid_mask]  # Make sure shape is compatible
+            query_points = query_points[:, valid_mask]  # 确保形状兼容
             pred_conf = pred_conf[valid_mask]
             pred_point_3d = pred_point_3d[valid_mask]
             pred_color = pred_color[valid_mask]
@@ -205,12 +205,12 @@ def _forward_on_query(
     reorder_index = calculate_index_mappings(query_index, frame_num, device=device)
 
     images_feed, fmaps_feed = switch_tensor_order([images, fmaps_for_tracker], reorder_index, dim=0)
-    images_feed = images_feed[None]  # add batch dimension
-    fmaps_feed = fmaps_feed[None]  # add batch dimension
+    images_feed = images_feed[None]  # 添加批维度
+    fmaps_feed = fmaps_feed[None]  # 添加批维度
 
     all_points_num = images_feed.shape[1] * query_points.shape[1]
 
-    # Don't need to be scared, this is just chunking to make GPU happy
+    # 不要害怕，这只是分块以让GPU满意
     if all_points_num > max_points_num:
         num_splits = (all_points_num + max_points_num - 1) // max_points_num
         query_points = torch.chunk(query_points, num_splits, dim=1)
@@ -230,11 +230,11 @@ def _forward_on_query(
 
 
 def _augment_non_visible_frames(
-    pred_tracks: list,  # ← running list of np.ndarrays
-    pred_vis_scores: list,  # ← running list of np.ndarrays
-    pred_confs: list,  # ← running list of np.ndarrays for confidence scores
-    pred_points_3d: list,  # ← running list of np.ndarrays for 3D points
-    pred_colors: list,  # ← running list of np.ndarrays for colors
+    pred_tracks: list,  # ← 运行中的np.ndarrays列表
+    pred_vis_scores: list,  # ← 运行中的np.ndarrays列表
+    pred_confs: list,  # ← 运行中的置信度分数np.ndarrays列表
+    pred_points_3d: list,  # ← 运行中的3D点np.ndarrays列表
+    pred_colors: list,  # ← 运行中的颜色np.ndarrays列表
     images: torch.Tensor,
     conf,
     points_3d,
@@ -249,58 +249,58 @@ def _augment_non_visible_frames(
     device: torch.device = None,
 ):
     """
-    Augment tracking for frames with insufficient visibility.
+    为可见性不足的帧增强跟踪。
 
-    Args:
-        pred_tracks: List of numpy arrays containing predicted tracks.
-        pred_vis_scores: List of numpy arrays containing visibility scores.
-        pred_confs: List of numpy arrays containing confidence scores.
-        pred_points_3d: List of numpy arrays containing 3D points.
-        pred_colors: List of numpy arrays containing point colors.
-        images: Tensor of shape [S, 3, H, W] containing the input images.
-        conf: Tensor of shape [S, 1, H, W] containing confidence scores
-        points_3d: Tensor containing 3D points
-        fmaps_for_tracker: Feature maps for the tracker
-        keypoint_extractors: Initialized feature extractors
-        tracker: VGG-SFM tracker
-        max_points_num: Maximum number of points to process at once
-        fine_tracking: Whether to use fine tracking
-        min_vis: Minimum visibility threshold
-        non_vis_thresh: Non-visibility threshold
-        device: Device to use for computation
+    参数:
+        pred_tracks: 包含预测轨迹的numpy数组列表。
+        pred_vis_scores: 包含可见性分数的numpy数组列表。
+        pred_confs: 包含置信度分数的numpy数组列表。
+        pred_points_3d: 包含3D点的numpy数组列表。
+        pred_colors: 包含点颜色的numpy数组列表。
+        images: 形状为[S, 3, H, W]的输入图像张量。
+        conf: 形状为[S, 1, H, W]的置信度分数张量
+        points_3d: 包含3D点的张量
+        fmaps_for_tracker: 跟踪器的特征图
+        keypoint_extractors: 初始化的特征提取器
+        tracker: VGG-SFM跟踪器
+        max_points_num: 一次处理的最大点数
+        fine_tracking: 是否使用精细跟踪
+        min_vis: 最小可见性阈值
+        non_vis_thresh: 非可见性阈值
+        device: 用于计算的设备
 
-    Returns:
-        Updated pred_tracks, pred_vis_scores, pred_confs, pred_points_3d, and pred_colors lists.
+    返回:
+        更新的pred_tracks、pred_vis_scores、pred_confs、pred_points_3d和pred_colors列表。
     """
     last_query = -1
     final_trial = False
-    cur_extractors = keypoint_extractors  # may be replaced on the final trial
+    cur_extractors = keypoint_extractors  # 可能在最终尝试时被替换
 
     while True:
-        # Visibility per frame
+        # 每帧的可见性
         vis_array = np.concatenate(pred_vis_scores, axis=1)
 
-        # Count frames with sufficient visibility using numpy
+        # 使用numpy计算具有足够可见性的帧
         sufficient_vis_count = (vis_array > non_vis_thresh).sum(axis=-1)
         non_vis_frames = np.where(sufficient_vis_count < min_vis)[0].tolist()
 
         if len(non_vis_frames) == 0:
             break
 
-        print("Processing non visible frames:", non_vis_frames)
+        print("正在处理非可见帧：", non_vis_frames)
 
-        # Decide the frames & extractor for this round
+        # 决定本轮的帧和提取器
         if non_vis_frames[0] == last_query:
-            # Same frame failed twice - final "all-in" attempt
+            # 同一帧失败两次 - 最终"全力以赴"尝试
             final_trial = True
             cur_extractors = initialize_feature_extractors(2048, extractor_method="sp+sift+aliked", device=device)
-            query_frame_list = non_vis_frames  # blast them all at once
+            query_frame_list = non_vis_frames  # 一次性处理所有
         else:
-            query_frame_list = [non_vis_frames[0]]  # Process one at a time
+            query_frame_list = [non_vis_frames[0]]  # 一次处理一个
 
         last_query = non_vis_frames[0]
 
-        # Run the tracker for every selected frame
+        # 为每个选定的帧运行跟踪器
         for query_index in query_frame_list:
             new_track, new_vis, new_conf, new_point_3d, new_color = _forward_on_query(
                 query_index,
@@ -321,6 +321,6 @@ def _augment_non_visible_frames(
             pred_colors.append(new_color)
 
         if final_trial:
-            break  # Stop after final attempt
+            break  # 最终尝试后停止
 
     return pred_tracks, pred_vis_scores, pred_confs, pred_points_3d, pred_colors

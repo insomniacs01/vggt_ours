@@ -20,7 +20,7 @@ def _is_torch(x: ArrayLike) -> bool:
 
 
 def _ensure_torch(x: ArrayLike) -> torch.Tensor:
-    """Convert input to torch tensor if it's not already one."""
+    """如果输入不是torch张量，则将其转换为torch张量。"""
     if _is_numpy(x):
         return torch.from_numpy(x)
     elif _is_torch(x):
@@ -31,14 +31,14 @@ def _ensure_torch(x: ArrayLike) -> torch.Tensor:
 
 def single_undistortion(params, tracks_normalized):
     """
-    Apply undistortion to the normalized tracks using the given distortion parameters once.
+    使用给定的畸变参数对归一化轨迹进行一次去畸变处理。
 
-    Args:
-        params (torch.Tensor or numpy.ndarray): Distortion parameters of shape BxN.
-        tracks_normalized (torch.Tensor or numpy.ndarray): Normalized tracks tensor of shape [batch_size, num_tracks, 2].
+    参数:
+        params (torch.Tensor or numpy.ndarray): 形状为BxN的畸变参数。
+        tracks_normalized (torch.Tensor or numpy.ndarray): 形状为[batch_size, num_tracks, 2]的归一化轨迹张量。
 
-    Returns:
-        torch.Tensor: Undistorted normalized tracks tensor.
+    返回:
+        torch.Tensor: 去畸变后的归一化轨迹张量。
     """
     params = _ensure_torch(params)
     tracks_normalized = _ensure_torch(tracks_normalized)
@@ -50,17 +50,17 @@ def single_undistortion(params, tracks_normalized):
 
 def iterative_undistortion(params, tracks_normalized, max_iterations=100, max_step_norm=1e-10, rel_step_size=1e-6):
     """
-    Iteratively undistort the normalized tracks using the given distortion parameters.
+    使用给定的畸变参数迭代地对归一化轨迹进行去畸变处理。
 
-    Args:
-        params (torch.Tensor or numpy.ndarray): Distortion parameters of shape BxN.
-        tracks_normalized (torch.Tensor or numpy.ndarray): Normalized tracks tensor of shape [batch_size, num_tracks, 2].
-        max_iterations (int): Maximum number of iterations for the undistortion process.
-        max_step_norm (float): Maximum step norm for convergence.
-        rel_step_size (float): Relative step size for numerical differentiation.
+    参数:
+        params (torch.Tensor or numpy.ndarray): 形状为BxN的畸变参数。
+        tracks_normalized (torch.Tensor or numpy.ndarray): 形状为[batch_size, num_tracks, 2]的归一化轨迹张量。
+        max_iterations (int): 去畸变过程的最大迭代次数。
+        max_step_norm (float): 收敛的最大步长范数。
+        rel_step_size (float): 数值微分的相对步长。
 
-    Returns:
-        torch.Tensor: Undistorted normalized tracks tensor.
+    返回:
+        torch.Tensor: 去畸变后的归一化轨迹张量。
     """
     params = _ensure_torch(params)
     tracks_normalized = _ensure_torch(tracks_normalized)
@@ -98,15 +98,15 @@ def iterative_undistortion(params, tracks_normalized, max_iterations=100, max_st
 
 def apply_distortion(extra_params, u, v):
     """
-    Applies radial or OpenCV distortion to the given 2D points.
+    对给定的2D点应用径向或OpenCV畸变。
 
-    Args:
-        extra_params (torch.Tensor or numpy.ndarray): Distortion parameters of shape BxN, where N can be 1, 2, or 4.
-        u (torch.Tensor or numpy.ndarray): Normalized x coordinates of shape Bxnum_tracks.
-        v (torch.Tensor or numpy.ndarray): Normalized y coordinates of shape Bxnum_tracks.
+    参数:
+        extra_params (torch.Tensor or numpy.ndarray): 形状为BxN的畸变参数，其中N可以是1、2或4。
+        u (torch.Tensor or numpy.ndarray): 形状为Bxnum_tracks的归一化x坐标。
+        v (torch.Tensor or numpy.ndarray): 形状为Bxnum_tracks的归一化y坐标。
 
-    Returns:
-        points2D (torch.Tensor): Distorted 2D points of shape BxNx2.
+    返回:
+        points2D (torch.Tensor): 形状为BxNx2的畸变后2D点。
     """
     extra_params = _ensure_torch(extra_params)
     u = _ensure_torch(u)
@@ -115,7 +115,7 @@ def apply_distortion(extra_params, u, v):
     num_params = extra_params.shape[1]
 
     if num_params == 1:
-        # Simple radial distortion
+        # 简单径向畸变
         k = extra_params[:, 0]
         u2 = u * u
         v2 = v * v
@@ -125,7 +125,7 @@ def apply_distortion(extra_params, u, v):
         dv = v * radial
 
     elif num_params == 2:
-        # RadialCameraModel distortion
+        # RadialCameraModel畸变
         k1, k2 = extra_params[:, 0], extra_params[:, 1]
         u2 = u * u
         v2 = v * v
@@ -135,7 +135,7 @@ def apply_distortion(extra_params, u, v):
         dv = v * radial
 
     elif num_params == 4:
-        # OpenCVCameraModel distortion
+        # OpenCVCameraModel畸变
         k1, k2, p1, p2 = (extra_params[:, 0], extra_params[:, 1], extra_params[:, 2], extra_params[:, 3])
         u2 = u * u
         v2 = v * v
@@ -145,7 +145,7 @@ def apply_distortion(extra_params, u, v):
         du = u * radial + 2 * p1[:, None] * uv + p2[:, None] * (r2 + 2 * u2)
         dv = v * radial + 2 * p2[:, None] * uv + p1[:, None] * (r2 + 2 * v2)
     else:
-        raise ValueError("Unsupported number of distortion parameters")
+        raise ValueError("不支持的畸变参数数量")
 
     u = u.clone() + du
     v = v.clone() + dv
@@ -159,13 +159,13 @@ if __name__ == "__main__":
 
     max_diff = 0
     for i in range(1000):
-        # Define distortion parameters (assuming 1 parameter for simplicity)
+        # 定义畸变参数（为简单起见，假设使用1个参数）
         B = random.randint(1, 500)
         track_num = random.randint(100, 1000)
-        params = torch.rand((B, 1), dtype=torch.float32)  # Batch size 1, 4 parameters
-        tracks_normalized = torch.rand((B, track_num, 2), dtype=torch.float32)  # Batch size 1, 5 points
+        params = torch.rand((B, 1), dtype=torch.float32)  # 批大小1，4个参数
+        tracks_normalized = torch.rand((B, track_num, 2), dtype=torch.float32)  # 批大小1，5个点
 
-        # Undistort the tracks
+        # 对轨迹进行去畸变
         undistorted_tracks = iterative_undistortion(params, tracks_normalized)
 
         for b in range(B):
@@ -175,7 +175,7 @@ if __name__ == "__main__":
             undistorted_tracks_pycolmap = pycam.cam_from_img(tracks_normalized[b].numpy())
             diff = (undistorted_tracks[b] - undistorted_tracks_pycolmap).abs().median()
             max_diff = max(max_diff, diff)
-            print(f"diff: {diff}, max_diff: {max_diff}")
+            print(f"差值: {diff}, 最大差值: {max_diff}")
 
     import pdb
 

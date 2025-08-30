@@ -11,24 +11,24 @@ import torch.nn.functional as F
 
 def activate_pose(pred_pose_enc, trans_act="linear", quat_act="linear", fl_act="linear"):
     """
-    Activate pose parameters with specified activation functions.
+    使用指定的激活函数激活姿态参数。
 
-    Args:
-        pred_pose_enc: Tensor containing encoded pose parameters [translation, quaternion, focal length]
-        trans_act: Activation type for translation component
-        quat_act: Activation type for quaternion component
-        fl_act: Activation type for focal length component
+    参数：
+        pred_pose_enc: 包含编码姿态参数的张量[平移、四元数、焦距]
+        trans_act: 平移分量的激活类型
+        quat_act: 四元数分量的激活类型
+        fl_act: 焦距分量的激活类型
 
-    Returns:
-        Activated pose parameters tensor
+    返回：
+        激活后的姿态参数张量
     """
     T = pred_pose_enc[..., :3]
     quat = pred_pose_enc[..., 3:7]
-    fl = pred_pose_enc[..., 7:]  # or fov
+    fl = pred_pose_enc[..., 7:]  # 或fov
 
     T = base_pose_act(T, trans_act)
     quat = base_pose_act(quat, quat_act)
-    fl = base_pose_act(fl, fl_act)  # or fov
+    fl = base_pose_act(fl, fl_act)  # 或fov
 
     pred_pose_enc = torch.cat([T, quat, fl], dim=-1)
 
@@ -37,14 +37,14 @@ def activate_pose(pred_pose_enc, trans_act="linear", quat_act="linear", fl_act="
 
 def base_pose_act(pose_enc, act_type="linear"):
     """
-    Apply basic activation function to pose parameters.
+    对姿态参数应用基本激活函数。
 
-    Args:
-        pose_enc: Tensor containing encoded pose parameters
-        act_type: Activation type ("linear", "inv_log", "exp", "relu")
+    参数：
+        pose_enc: 包含编码姿态参数的张量
+        act_type: 激活类型（"linear"、"inv_log"、"exp"、"relu"）
 
-    Returns:
-        Activated pose parameters
+    返回：
+        激活后的姿态参数
     """
     if act_type == "linear":
         return pose_enc
@@ -55,25 +55,25 @@ def base_pose_act(pose_enc, act_type="linear"):
     elif act_type == "relu":
         return F.relu(pose_enc)
     else:
-        raise ValueError(f"Unknown act_type: {act_type}")
+        raise ValueError(f"未知的act_type：{act_type}")
 
 
 def activate_head(out, activation="norm_exp", conf_activation="expp1"):
     """
-    Process network output to extract 3D points and confidence values.
+    处理网络输出以提取3D点和置信度值。
 
-    Args:
-        out: Network output tensor (B, C, H, W)
-        activation: Activation type for 3D points
-        conf_activation: Activation type for confidence values
+    参数：
+        out: 网络输出张量 (B, C, H, W)
+        activation: 3D点的激活类型
+        conf_activation: 置信度值的激活类型
 
-    Returns:
-        Tuple of (3D points tensor, confidence tensor)
+    返回：
+        (3D点张量，置信度张量)元组
     """
-    # Move channels from last dim to the 4th dimension => (B, H, W, C)
-    fmap = out.permute(0, 2, 3, 1)  # B,H,W,C expected
+    # 将通道从最后一维移动到第4维 => (B, H, W, C)
+    fmap = out.permute(0, 2, 3, 1)  # 期望B,H,W,C
 
-    # Split into xyz (first C-1 channels) and confidence (last channel)
+    # 分割为xyz（前C-1个通道）和置信度（最后一个通道）
     xyz = fmap[:, :, :, :-1]
     conf = fmap[:, :, :, -1]
 
@@ -98,7 +98,7 @@ def activate_head(out, activation="norm_exp", conf_activation="expp1"):
     elif activation == "linear":
         pts3d = xyz
     else:
-        raise ValueError(f"Unknown activation: {activation}")
+        raise ValueError(f"未知的激活：{activation}")
 
     if conf_activation == "expp1":
         conf_out = 1 + conf.exp()
@@ -107,19 +107,19 @@ def activate_head(out, activation="norm_exp", conf_activation="expp1"):
     elif conf_activation == "sigmoid":
         conf_out = torch.sigmoid(conf)
     else:
-        raise ValueError(f"Unknown conf_activation: {conf_activation}")
+        raise ValueError(f"未知的conf_activation：{conf_activation}")
 
     return pts3d, conf_out
 
 
 def inverse_log_transform(y):
     """
-    Apply inverse log transform: sign(y) * (exp(|y|) - 1)
+    应用逆对数变换：sign(y) * (exp(|y|) - 1)
 
-    Args:
-        y: Input tensor
+    参数：
+        y: 输入张量
 
-    Returns:
-        Transformed tensor
+    返回：
+        变换后的张量
     """
     return torch.sign(y) * (torch.expm1(torch.abs(y)))

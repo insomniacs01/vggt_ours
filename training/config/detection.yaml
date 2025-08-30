@@ -1,0 +1,181 @@
+defaults:
+  - default_dataset
+  - _self_
+
+exp_name: detection_3d
+img_size: 518
+num_workers: 0
+seed_value: 42
+accum_steps: 1
+patch_size: 14
+val_epoch_freq: 5
+max_img_per_gpu: 4
+checkpoint_freq: 5
+
+# 模型配置
+model:
+  _target_: vggt.models.vggt.VGGT
+  img_size: ${img_size}
+  patch_size: ${patch_size}
+  embed_dim: 1024
+  enable_camera: true
+  enable_point: true
+  enable_depth: false
+  enable_track: false
+  enable_detection: true
+  num_classes: 10
+
+# 损失函数配置
+loss:
+  detection:
+    weight: 5.0
+    num_classes: 10
+    pos_weight: 5.0
+    size_weight: 2.0
+    angle_weight: 1.0
+    cls_weight: 1.0
+    obj_weight: 0.5
+    iou_weight: 2.0
+    focal_alpha: 0.25
+    focal_gamma: 2.0
+    iou_loss_type: 'iou'
+
+# 优化器配置
+optim:
+  optimizer:
+    _target_: torch.optim.AdamW
+    lr: 1e-4
+    weight_decay: 0.05
+
+  frozen_module_names:
+    - "aggregator"
+    - "camera_head"
+    - "depth_head"
+    - "point_head"
+
+  amp:
+    enabled: false
+    amp_dtype: float16
+
+  gradient_clip:
+    max_norm: 1.0
+    norm_type: 2
+
+logging:
+  log_dir: logs
+  log_level_primary: DEBUG
+  log_freq: 1
+
+checkpoint:
+  save_dir: logs/${exp_name}/ckpts
+  save_freq: 5
+  resume_checkpoint_path: null
+  strict: false
+
+data:
+  train:
+    _target_: training.data.dynamic_dataloader.DynamicTorchDataset
+    num_workers: ${num_workers}
+    shuffle: true
+    pin_memory: false
+    drop_last: true
+    max_img_per_gpu: ${max_img_per_gpu}
+    seed: ${seed_value}
+
+    common_config:
+      img_size: ${img_size}
+      patch_size: ${patch_size}
+      training: true
+      debug: true
+      load_depth: true
+      load_track: true
+      inside_random: true
+      allow_duplicate_img: true
+      rescale: true
+      rescale_aug: true
+      landscape_check: true
+      fix_img_num: -1
+      fix_aspect_ratio: 1.0
+      get_nearby: true
+      repeat_batch: false
+
+      augs:
+        scales: [0.8, 1.2]
+        aspects: [0.5, 1.0]
+        color_jitter:
+          brightness: 0.5
+          contrast: 0.5
+          saturation: 0.5
+          hue: 0.1
+          p: 0.9
+        gray_scale: true
+        gau_blur: false
+        cojitter: true
+        cojitter_ratio: 0.5
+
+      img_nums: [2, 4]
+      track_num: 512
+
+    dataset:
+      _recursive_: false
+      dataset_configs:
+        - dataset_type: training.data.datasets.detection_dataset.Detection3DDataset
+          data_dirs:
+            - ../datasets/detection_3d/train
+#            - ../3242
+          split: train
+          max_objects: 50
+          len_train: 40
+          len_test: 10
+
+  val:
+    _target_: training.data.dynamic_dataloader.DynamicTorchDataset
+    num_workers: ${num_workers}
+    shuffle: false
+    pin_memory: false
+    drop_last: false
+    max_img_per_gpu: ${max_img_per_gpu}
+    seed: ${seed_value}
+
+    common_config:
+      img_size: ${img_size}
+      patch_size: ${patch_size}
+      training: false
+      debug: false
+      load_depth: false
+      load_track: false
+      inside_random: false
+      allow_duplicate_img: false
+      rescale: true
+      rescale_aug: false
+      landscape_check: false
+      fix_img_num: 2
+      fix_aspect_ratio: 1.0
+      get_nearby: true
+      repeat_batch: false
+
+      augs:
+        scales: [1.0, 1.0]
+        aspects: [1.0, 1.0]
+        color_jitter: null
+        gray_scale: false
+        gau_blur: false
+        cojitter: false
+        cojitter_ratio: 0.0
+
+      img_nums: [2, 2]
+      track_num: 512
+
+    dataset:
+      _recursive_: false
+      dataset_configs:
+        - dataset_type: training.data.datasets.detection_dataset.Detection3DDataset
+          data_dirs:
+            - ../datasets/detection_3d/train
+#            - ../3242
+          split: test
+          max_objects: 50
+          len_train: 40
+          len_test: 10
+
+max_epochs: 10

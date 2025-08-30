@@ -1,73 +1,92 @@
 # Copyright (c) Meta Platforms, Inc. and affiliates.
 # All rights reserved.
-#
-# This source code is licensed under the license found in the
-# LICENSE file in the root directory of this source tree.
 
 import torch
 import torch.nn as nn
-from huggingface_hub import PyTorchModelHubMixin  # used for model hub
+from huggingface_hub import PyTorchModelHubMixin
 
 from vggt.models.aggregator import Aggregator
 from vggt.heads.camera_head import CameraHead
 from vggt.heads.dpt_head import DPTHead
 from vggt.heads.track_head import TrackHead
+from vggt.heads.detection_head import DetectionHead
 
 
 class VGGT(nn.Module, PyTorchModelHubMixin):
     def __init__(self, img_size=518, patch_size=14, embed_dim=1024,
-                 enable_camera=True, enable_point=True, enable_depth=True, enable_track=True):
+                 enable_camera=True, enable_point=True, enable_depth=True,
+                 enable_track=True, enable_detection=False,
+                 num_classes=10,
+                 # DN-DETR和DAB-DETR参数
+                 use_dn=True, use_dab=True):
         super().__init__()
 
         self.aggregator = Aggregator(img_size=img_size, patch_size=patch_size, embed_dim=embed_dim)
 
         self.camera_head = CameraHead(dim_in=2 * embed_dim) if enable_camera else None
-        self.point_head = DPTHead(dim_in=2 * embed_dim, output_dim=4, activation="inv_log", conf_activation="expp1") if enable_point else None
-        self.depth_head = DPTHead(dim_in=2 * embed_dim, output_dim=2, activation="exp", conf_activation="expp1") if enable_depth else None
+        self.point_head = DPTHead(dim_in=2 * embed_dim, output_dim=4, activation="inv_log",
+                                  conf_activation="expp1") if enable_point else None
+        self.depth_head = DPTHead(dim_in=2 * embed_dim, output_dim=2, activation="exp",
+                                  conf_activation="expp1") if enable_depth else None
         self.track_head = TrackHead(dim_in=2 * embed_dim, patch_size=patch_size) if enable_track else None
 
-    def forward(self, images: torch.Tensor, query_points: torch.Tensor = None):
+        # 增强的3D检测头
+        self.detection_head = DetectionHead(
+            dim_in=2 * embed_dim,
+            patch_size=patch_size,
+            num_classes=num_classes,
+            max_per_image=300,
+            training_sample_size=100,
+            conf_threshold=0.01,
+            use_dn=use_dn,  # DN-DETR
+            use_dab=use_dab,  # DAB-DETR
+            dn_number=100,
+            dn_noise_scale=0.4
+        ) if enable_detection else None
+
+    def forward(self, images: torch.Tensor, query_points: torch.Tensor = None,
+                gt_boxes: torch.Tensor = None, gt_classes: torch.Tensor = None,
+                epoch: int = 0):
         """
-        Forward pass of the VGGT model.
+        VGGT模型的前向传播。
 
-        Args:
-            images (torch.Tensor): Input images with shape [S, 3, H, W] or [B, S, 3, H, W], in range [0, 1].
-                B: batch size, S: sequence length, 3: RGB channels, H: height, W: width
-            query_points (torch.Tensor, optional): Query points for tracking, in pixel coordinates.
-                Shape: [N, 2] or [B, N, 2], where N is the number of query points.
-                Default: None
+        参数:
+            images: 输入图像 [S, 3, H, W] 或 [B, S, 3, H, W]
+            query_points: 查询点坐标 [N, 2] 或 [B, N, 2]
+            gt_boxes: GT 3D框 (训练时用于DN) [B, M, 7]
+            gt_classes: GT类别 (训练时用于DN) [B, M]
+            epoch: 当前训练epoch（用于渐进式训练）
 
-        Returns:
-            dict: A dictionary containing the following predictions:
-                - pose_enc (torch.Tensor): Camera pose encoding with shape [B, S, 9] (from the last iteration)
-                - depth (torch.Tensor): Predicted depth maps with shape [B, S, H, W, 1]
-                - depth_conf (torch.Tensor): Confidence scores for depth predictions with shape [B, S, H, W]
-                - world_points (torch.Tensor): 3D world coordinates for each pixel with shape [B, S, H, W, 3]
-                - world_points_conf (torch.Tensor): Confidence scores for world points with shape [B, S, H, W]
-                - images (torch.Tensor): Original input images, preserved for visualization
-
-                If query_points is provided, also includes:
-                - track (torch.Tensor): Point tracks with shape [B, S, N, 2] (from the last iteration), in pixel coordinates
-                - vis (torch.Tensor): Visibility scores for tracked points with shape [B, S, N]
-                - conf (torch.Tensor): Confidence scores for tracked points with shape [B, S, N]
-        """        
-        # If without batch dimension, add it
+        返回:
+            dict: 包含各种预测结果的字典
+        """
+        # 添加批量维度
         if len(images.shape) == 4:
             images = images.unsqueeze(0)
-            
-        if query_points is not None and len(query_points.shape) == 2:
-            query_points = query_points.unsqueeze(0)
 
         aggregated_tokens_list, patch_start_idx = self.aggregator(images)
 
         predictions = {}
 
         with torch.cuda.amp.autocast(enabled=False):
+            if self.detection_head is not None:
+                # 传递epoch信息给detection head
+                detection_results = self.detection_head(
+                    aggregated_tokens_list,
+                    images=images,
+                    patch_start_idx=patch_start_idx,
+                    gt_boxes=gt_boxes if self.training else None,
+                    gt_classes=gt_classes if self.training else None,
+                    epoch=epoch if self.training else 0  # 传递epoch
+                )
+                predictions.update(detection_results)
+
+            # 其他head的处理保持不变...
             if self.camera_head is not None:
                 pose_enc_list = self.camera_head(aggregated_tokens_list)
-                predictions["pose_enc"] = pose_enc_list[-1]  # pose encoding of the last iteration
+                predictions["pose_enc"] = pose_enc_list[-1]
                 predictions["pose_enc_list"] = pose_enc_list
-                
+
             if self.depth_head is not None:
                 depth, depth_conf = self.depth_head(
                     aggregated_tokens_list, images=images, patch_start_idx=patch_start_idx
@@ -86,12 +105,11 @@ class VGGT(nn.Module, PyTorchModelHubMixin):
             track_list, vis, conf = self.track_head(
                 aggregated_tokens_list, images=images, patch_start_idx=patch_start_idx, query_points=query_points
             )
-            predictions["track"] = track_list[-1]  # track of the last iteration
+            predictions["track"] = track_list[-1]
             predictions["vis"] = vis
             predictions["conf"] = conf
 
         if not self.training:
-            predictions["images"] = images  # store the images for visualization during inference
+            predictions["images"] = images
 
         return predictions
-

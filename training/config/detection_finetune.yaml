@@ -1,0 +1,27 @@
+defaults:
+  - detection.yaml
+
+exp_name: detection_3d_finetune
+
+checkpoint:
+  save_dir: logs/${exp_name}/ckpts
+  save_freq: 5
+  resume_checkpoint_path: logs/detection_3d/ckpts/epoch_10.pth
+  strict: True
+
+optim:
+  optimizer:
+    _target_: torch.optim.AdamW
+    lr: 1e-5
+    weight_decay: 0.05
+
+  frozen_module_names: []
+
+  options:
+    lr:
+      - scheduler:
+          _target_: fvcore.common.param_scheduler.CosineParamScheduler
+          start_value: 1e-5
+          end_value: 1e-7
+
+max_epochs: 20

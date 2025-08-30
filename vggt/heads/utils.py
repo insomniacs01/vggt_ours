@@ -10,24 +10,24 @@ import torch.nn as nn
 
 def position_grid_to_embed(pos_grid: torch.Tensor, embed_dim: int, omega_0: float = 100) -> torch.Tensor:
     """
-    Convert 2D position grid (HxWx2) to sinusoidal embeddings (HxWxC)
+    将2D位置网格(HxWx2)转换为正弦嵌入(HxWxC)
 
-    Args:
-        pos_grid: Tensor of shape (H, W, 2) containing 2D coordinates
-        embed_dim: Output channel dimension for embeddings
+    参数：
+        pos_grid: 形状为(H, W, 2)的张量，包含2D坐标
+        embed_dim: 嵌入的输出通道维度
 
-    Returns:
-        Tensor of shape (H, W, embed_dim) with positional embeddings
+    返回：
+        形状为(H, W, embed_dim)的位置嵌入张量
     """
     H, W, grid_dim = pos_grid.shape
     assert grid_dim == 2
-    pos_flat = pos_grid.reshape(-1, grid_dim)  # Flatten to (H*W, 2)
+    pos_flat = pos_grid.reshape(-1, grid_dim)  # 展平为(H*W, 2)
 
-    # Process x and y coordinates separately
+    # 分别处理x和y坐标
     emb_x = make_sincos_pos_embed(embed_dim // 2, pos_flat[:, 0], omega_0=omega_0)  # [1, H*W, D/2]
     emb_y = make_sincos_pos_embed(embed_dim // 2, pos_flat[:, 1], omega_0=omega_0)  # [1, H*W, D/2]
 
-    # Combine and reshape
+    # 组合并重塑
     emb = torch.cat([emb_x, emb_y], dim=-1)  # [1, H*W, D]
 
     return emb.view(H, W, embed_dim)  # [H, W, D]
@@ -35,14 +35,14 @@ def position_grid_to_embed(pos_grid: torch.Tensor, embed_dim: int, omega_0: floa
 
 def make_sincos_pos_embed(embed_dim: int, pos: torch.Tensor, omega_0: float = 100) -> torch.Tensor:
     """
-    This function generates a 1D positional embedding from a given grid using sine and cosine functions.
+    该函数使用正弦和余弦函数从给定网格生成1D位置嵌入。
 
-    Args:
-    - embed_dim: The embedding dimension.
-    - pos: The position to generate the embedding from.
+    参数：
+    - embed_dim: 嵌入维度。
+    - pos: 生成嵌入的位置。
 
-    Returns:
-    - emb: The generated 1D positional embedding.
+    返回：
+    - emb: 生成的1D位置嵌入。
     """
     assert embed_dim % 2 == 0
     device = pos.device
@@ -51,7 +51,7 @@ def make_sincos_pos_embed(embed_dim: int, pos: torch.Tensor, omega_0: float = 10
     omega = 1.0 / omega_0**omega  # (D/2,)
 
     pos = pos.reshape(-1)  # (M,)
-    out = torch.einsum("m,d->md", pos, omega)  # (M, D/2), outer product
+    out = torch.einsum("m,d->md", pos, omega)  # (M, D/2), 外积
 
     emb_sin = torch.sin(out)  # (M, D/2)
     emb_cos = torch.cos(out)  # (M, D/2)
@@ -60,49 +60,49 @@ def make_sincos_pos_embed(embed_dim: int, pos: torch.Tensor, omega_0: float = 10
     return emb.float()
 
 
-# Inspired by https://github.com/microsoft/moge
+# 灵感来源于 https://github.com/microsoft/moge
 
 
 def create_uv_grid(
     width: int, height: int, aspect_ratio: float = None, dtype: torch.dtype = None, device: torch.device = None
 ) -> torch.Tensor:
     """
-    Create a normalized UV grid of shape (width, height, 2).
+    创建形状为(width, height, 2)的归一化UV网格。
 
-    The grid spans horizontally and vertically according to an aspect ratio,
-    ensuring the top-left corner is at (-x_span, -y_span) and the bottom-right
-    corner is at (x_span, y_span), normalized by the diagonal of the plane.
+    网格根据宽高比在水平和垂直方向上展开，
+    确保左上角在(-x_span, -y_span)，右下角
+    在(x_span, y_span)，通过平面的对角线进行归一化。
 
-    Args:
-        width (int): Number of points horizontally.
-        height (int): Number of points vertically.
-        aspect_ratio (float, optional): Width-to-height ratio. Defaults to width/height.
-        dtype (torch.dtype, optional): Data type of the resulting tensor.
-        device (torch.device, optional): Device on which the tensor is created.
+    参数：
+        width (int): 水平点数。
+        height (int): 垂直点数。
+        aspect_ratio (float, optional): 宽高比。默认为width/height。
+        dtype (torch.dtype, optional): 结果张量的数据类型。
+        device (torch.device, optional): 创建张量的设备。
 
-    Returns:
-        torch.Tensor: A (width, height, 2) tensor of UV coordinates.
+    返回：
+        torch.Tensor: UV坐标的(width, height, 2)张量。
     """
-    # Derive aspect ratio if not explicitly provided
+    # 如果未明确提供，则推导宽高比
     if aspect_ratio is None:
         aspect_ratio = float(width) / float(height)
 
-    # Compute normalized spans for X and Y
+    # 计算X和Y的归一化跨度
     diag_factor = (aspect_ratio**2 + 1.0) ** 0.5
     span_x = aspect_ratio / diag_factor
     span_y = 1.0 / diag_factor
 
-    # Establish the linspace boundaries
+    # 建立线性空间边界
     left_x = -span_x * (width - 1) / width
     right_x = span_x * (width - 1) / width
     top_y = -span_y * (height - 1) / height
     bottom_y = span_y * (height - 1) / height
 
-    # Generate 1D coordinates
+    # 生成1D坐标
     x_coords = torch.linspace(left_x, right_x, steps=width, dtype=dtype, device=device)
     y_coords = torch.linspace(top_y, bottom_y, steps=height, dtype=dtype, device=device)
 
-    # Create 2D meshgrid (width x height) and stack into UV
+    # 创建2D网格(width x height)并堆叠成UV
     uu, vv = torch.meshgrid(x_coords, y_coords, indexing="xy")
     uv_grid = torch.stack((uu, vv), dim=-1)
 

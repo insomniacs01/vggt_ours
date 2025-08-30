@@ -3,7 +3,7 @@
 # This source code is licensed under the Apache License, Version 2.0
 # found in the LICENSE file in the root directory of this source tree.
 
-# References:
+# 参考资料：
 #   https://github.com/facebookresearch/dino/blob/main/vision_transformer.py
 #   https://github.com/rwightman/pytorch-image-models/tree/master/timm/models/vision_transformer.py
 
@@ -54,7 +54,7 @@ class DinoVisionTransformer(nn.Module):
         proj_bias=True,
         drop_path_rate=0.0,
         drop_path_uniform=False,
-        init_values=None,  # for layerscale: None or 0 => no layerscale
+        init_values=None,  # 用于layerscale：None或0 => 无layerscale
         embed_layer=PatchEmbed,
         act_layer=nn.GELU,
         block_fn=Block,
@@ -66,34 +66,34 @@ class DinoVisionTransformer(nn.Module):
         qk_norm=False,
     ):
         """
-        Args:
-            img_size (int, tuple): input image size
-            patch_size (int, tuple): patch size
-            in_chans (int): number of input channels
-            embed_dim (int): embedding dimension
-            depth (int): depth of transformer
-            num_heads (int): number of attention heads
-            mlp_ratio (int): ratio of mlp hidden dim to embedding dim
-            qkv_bias (bool): enable bias for qkv if True
-            proj_bias (bool): enable bias for proj in attn if True
-            ffn_bias (bool): enable bias for ffn if True
-            drop_path_rate (float): stochastic depth rate
-            drop_path_uniform (bool): apply uniform drop rate across blocks
-            weight_init (str): weight init scheme
-            init_values (float): layer-scale init values
-            embed_layer (nn.Module): patch embedding layer
-            act_layer (nn.Module): MLP activation layer
-            block_fn (nn.Module): transformer block class
-            ffn_layer (str): "mlp", "swiglu", "swiglufused" or "identity"
-            block_chunks: (int) split block sequence into block_chunks units for FSDP wrap
-            num_register_tokens: (int) number of extra cls tokens (so-called "registers")
-            interpolate_antialias: (str) flag to apply anti-aliasing when interpolating positional embeddings
-            interpolate_offset: (float) work-around offset to apply when interpolating positional embeddings
+        参数：
+            img_size (int, tuple): 输入图像尺寸
+            patch_size (int, tuple): patch尺寸
+            in_chans (int): 输入通道数
+            embed_dim (int): 嵌入维度
+            depth (int): transformer深度
+            num_heads (int): 注意力头数
+            mlp_ratio (int): mlp隐藏维度与嵌入维度的比率
+            qkv_bias (bool): 如果为True，为qkv启用偏置
+            proj_bias (bool): 如果为True，为注意力中的proj启用偏置
+            ffn_bias (bool): 如果为True，为ffn启用偏置
+            drop_path_rate (float): 随机深度率
+            drop_path_uniform (bool): 在各块之间应用统一的丢弃率
+            weight_init (str): 权重初始化方案
+            init_values (float): 层缩放初始值
+            embed_layer (nn.Module): patch嵌入层
+            act_layer (nn.Module): MLP激活层
+            block_fn (nn.Module): transformer块类
+            ffn_layer (str): "mlp"、"swiglu"、"swiglufused"或"identity"
+            block_chunks: (int) 将块序列分成block_chunks单元用于FSDP包装
+            num_register_tokens: (int) 额外的cls令牌数（所谓的"寄存器"）
+            interpolate_antialias: (str) 插值位置嵌入时应用抗锯齿的标志
+            interpolate_offset: (float) 插值位置嵌入时应用的解决方案偏移
         """
         super().__init__()
         norm_layer = partial(nn.LayerNorm, eps=1e-6)
 
-        self.num_features = self.embed_dim = embed_dim  # num_features for consistency with other models
+        self.num_features = self.embed_dim = embed_dim  # num_features用于与其他模型保持一致
         self.num_tokens = 1
         self.n_blocks = depth
         self.num_heads = num_heads
@@ -101,7 +101,7 @@ class DinoVisionTransformer(nn.Module):
         self.num_register_tokens = num_register_tokens
         self.interpolate_antialias = interpolate_antialias
         self.interpolate_offset = interpolate_offset
-        self.use_reentrant = False # hardcoded to False
+        self.use_reentrant = False # 硬编码为False
 
         self.patch_embed = embed_layer(img_size=img_size, patch_size=patch_size, in_chans=in_chans, embed_dim=embed_dim)
         num_patches = self.patch_embed.num_patches
@@ -116,16 +116,16 @@ class DinoVisionTransformer(nn.Module):
         if drop_path_uniform is True:
             dpr = [drop_path_rate] * depth
         else:
-            dpr = [x.item() for x in torch.linspace(0, drop_path_rate, depth)]  # stochastic depth decay rule
+            dpr = [x.item() for x in torch.linspace(0, drop_path_rate, depth)]  # 随机深度衰减规则
 
         if ffn_layer == "mlp":
-            logger.info("using MLP layer as FFN")
+            logger.info("使用MLP层作为FFN")
             ffn_layer = Mlp
         elif ffn_layer == "swiglufused" or ffn_layer == "swiglu":
-            logger.info("using SwiGLU layer as FFN")
+            logger.info("使用SwiGLU层作为FFN")
             ffn_layer = SwiGLUFFNFused
         elif ffn_layer == "identity":
-            logger.info("using Identity layer as FFN")
+            logger.info("使用Identity层作为FFN")
 
             def f(*args, **kwargs):
                 return nn.Identity()
@@ -156,7 +156,7 @@ class DinoVisionTransformer(nn.Module):
             chunked_blocks = []
             chunksize = depth // block_chunks
             for i in range(0, depth, chunksize):
-                # this is to keep the block index consistent if we chunk the block list
+                # 这是为了在分块块列表时保持块索引一致
                 chunked_blocks.append([nn.Identity()] * i + blocks_list[i : i + chunksize])
             self.blocks = nn.ModuleList([BlockChunk(p) for p in chunked_blocks])
         else:
@@ -189,17 +189,17 @@ class DinoVisionTransformer(nn.Module):
         dim = x.shape[-1]
         w0 = w // self.patch_size
         h0 = h // self.patch_size
-        M = int(math.sqrt(N))  # Recover the number of patches in each dimension
+        M = int(math.sqrt(N))  # 恢复每个维度中的patch数量
         assert N == M * M
         kwargs = {}
         if self.interpolate_offset:
-            # Historical kludge: add a small number to avoid floating point error in the interpolation, see https://github.com/facebookresearch/dino/issues/8
-            # Note: still needed for backward-compatibility, the underlying operators are using both output size and scale factors
+            # 历史补丁：添加一个小数字以避免插值中的浮点错误，参见 https://github.com/facebookresearch/dino/issues/8
+            # 注意：为了向后兼容仍然需要，底层运算符同时使用输出大小和缩放因子
             sx = float(w0 + self.interpolate_offset) / M
             sy = float(h0 + self.interpolate_offset) / M
             kwargs["scale_factor"] = (sx, sy)
         else:
-            # Simply specify an output size instead of a scale factor
+            # 简单地指定输出大小而不是缩放因子
             kwargs["size"] = (w0, h0)
         patch_pos_embed = nn.functional.interpolate(
             patch_pos_embed.reshape(1, M, M, dim).permute(0, 3, 1, 2),
@@ -272,34 +272,34 @@ class DinoVisionTransformer(nn.Module):
 
     def _get_intermediate_layers_not_chunked(self, x, n=1):
         x = self.prepare_tokens_with_masks(x)
-        # If n is an int, take the n last blocks. If it's a list, take them
+        # 如果n是整数，取最后n个块。如果是列表，取列表中的块
         output, total_block_len = [], len(self.blocks)
         blocks_to_take = range(total_block_len - n, total_block_len) if isinstance(n, int) else n
         for i, blk in enumerate(self.blocks):
             x = blk(x)
             if i in blocks_to_take:
                 output.append(x)
-        assert len(output) == len(blocks_to_take), f"only {len(output)} / {len(blocks_to_take)} blocks found"
+        assert len(output) == len(blocks_to_take), f"只找到 {len(output)} / {len(blocks_to_take)} 个块"
         return output
 
     def _get_intermediate_layers_chunked(self, x, n=1):
         x = self.prepare_tokens_with_masks(x)
         output, i, total_block_len = [], 0, len(self.blocks[-1])
-        # If n is an int, take the n last blocks. If it's a list, take them
+        # 如果n是整数，取最后n个块。如果是列表，取列表中的块
         blocks_to_take = range(total_block_len - n, total_block_len) if isinstance(n, int) else n
         for block_chunk in self.blocks:
-            for blk in block_chunk[i:]:  # Passing the nn.Identity()
+            for blk in block_chunk[i:]:  # 跳过nn.Identity()
                 x = blk(x)
                 if i in blocks_to_take:
                     output.append(x)
                 i += 1
-        assert len(output) == len(blocks_to_take), f"only {len(output)} / {len(blocks_to_take)} blocks found"
+        assert len(output) == len(blocks_to_take), f"只找到 {len(output)} / {len(blocks_to_take)} 个块"
         return output
 
     def get_intermediate_layers(
         self,
         x: torch.Tensor,
-        n: Union[int, Sequence] = 1,  # Layers or n last layers to take
+        n: Union[int, Sequence] = 1,  # 要提取的层或最后n层
         reshape: bool = False,
         return_class_token: bool = False,
         norm=True,
@@ -331,7 +331,7 @@ class DinoVisionTransformer(nn.Module):
 
 
 def init_weights_vit_timm(module: nn.Module, name: str = ""):
-    """ViT weight initialization, original timm impl (for reproducibility)"""
+    """ViT权重初始化，原始timm实现（用于可重现性）"""
     if isinstance(module, nn.Linear):
         trunc_normal_(module.weight, std=0.02)
         if module.bias is not None:
@@ -382,7 +382,7 @@ def vit_large(patch_size=16, num_register_tokens=0, **kwargs):
 
 def vit_giant2(patch_size=16, num_register_tokens=0, **kwargs):
     """
-    Close to ViT-giant, with embed-dim 1536 and 24 heads => embed-dim per head 64
+    接近ViT-giant，嵌入维度为1536，24个头 => 每个头的嵌入维度为64
     """
     model = DinoVisionTransformer(
         patch_size=patch_size,

@@ -3,7 +3,7 @@
 # This source code is licensed under the Apache License, Version 2.0
 # found in the LICENSE file in the root directory of this source tree.
 
-# References:
+# 参考：
 #   https://github.com/facebookresearch/dino/blob/master/vision_transformer.py
 #   https://github.com/rwightman/pytorch-image-models/tree/master/timm/layers/patch_embed.py
 
@@ -42,7 +42,7 @@ class Block(nn.Module):
         attn_class: Callable[..., nn.Module] = Attention,
         ffn_layer: Callable[..., nn.Module] = Mlp,
         qk_norm: bool = False,
-        fused_attn: bool = True,  # use F.scaled_dot_product_attention or not
+        fused_attn: bool = True,  # 是否使用 F.scaled_dot_product_attention
         rope=None,
     ) -> None:
         super().__init__()
@@ -82,7 +82,7 @@ class Block(nn.Module):
             return self.ls2(self.mlp(self.norm2(x)))
 
         if self.training and self.sample_drop_ratio > 0.1:
-            # the overhead is compensated only for a drop path rate larger than 0.1
+            # 只有当丢弃路径率大于0.1时，开销才能得到补偿
             x = drop_add_residual_stochastic_depth(
                 x, pos=pos, residual_func=attn_residual_func, sample_drop_ratio=self.sample_drop_ratio
             )
@@ -91,7 +91,7 @@ class Block(nn.Module):
             )
         elif self.training and self.sample_drop_ratio > 0.0:
             x = x + self.drop_path1(attn_residual_func(x, pos=pos))
-            x = x + self.drop_path1(ffn_residual_func(x))  # FIXME: drop_path2
+            x = x + self.drop_path1(ffn_residual_func(x))  # 修复：drop_path2
         else:
             x = x + attn_residual_func(x, pos=pos)
             x = x + ffn_residual_func(x)
@@ -101,15 +101,15 @@ class Block(nn.Module):
 def drop_add_residual_stochastic_depth(
     x: Tensor, residual_func: Callable[[Tensor], Tensor], sample_drop_ratio: float = 0.0, pos=None
 ) -> Tensor:
-    # 1) extract subset using permutation
+    # 1) 使用排列提取子集
     b, n, d = x.shape
     sample_subset_size = max(int(b * (1 - sample_drop_ratio)), 1)
     brange = (torch.randperm(b, device=x.device))[:sample_subset_size]
     x_subset = x[brange]
 
-    # 2) apply residual_func to get residual
+    # 2) 应用residual_func获取残差
     if pos is not None:
-        # if necessary, apply rope to the subset
+        # 如果需要，对子集应用rope
         pos = pos[brange]
         residual = residual_func(x_subset, pos=pos)
     else:
@@ -120,7 +120,7 @@ def drop_add_residual_stochastic_depth(
 
     residual_scale_factor = b / sample_subset_size
 
-    # 3) add the residual
+    # 3) 添加残差
     x_plus_residual = torch.index_add(x_flat, 0, brange, residual.to(dtype=x.dtype), alpha=residual_scale_factor)
     return x_plus_residual.view_as(x)
 
@@ -150,7 +150,7 @@ attn_bias_cache: Dict[Tuple, Any] = {}
 
 def get_attn_bias_and_cat(x_list, branges=None):
     """
-    this will perform the index select, cat the tensors, and provide the attn_bias from cache
+    这将执行索引选择，连接张量，并从缓存中提供attn_bias
     """
     batch_sizes = [b.shape[0] for b in branges] if branges is not None else [x.shape[0] for x in x_list]
     all_shapes = tuple((b, x.shape[1]) for b, x in zip(batch_sizes, x_list))
@@ -178,15 +178,15 @@ def drop_add_residual_stochastic_depth_list(
     sample_drop_ratio: float = 0.0,
     scaling_vector=None,
 ) -> Tensor:
-    # 1) generate random set of indices for dropping samples in the batch
+    # 1) 生成用于在批次中丢弃样本的随机索引集
     branges_scales = [get_branges_scales(x, sample_drop_ratio=sample_drop_ratio) for x in x_list]
     branges = [s[0] for s in branges_scales]
     residual_scale_factors = [s[1] for s in branges_scales]
 
-    # 2) get attention bias and index+concat the tensors
+    # 2) 获取注意力偏置并索引+连接张量
     attn_bias, x_cat = get_attn_bias_and_cat(x_list, branges)
 
-    # 3) apply residual_func to get residual, and split the result
+    # 3) 应用residual_func获取残差，并分割结果
     residual_list = attn_bias.split(residual_func(x_cat, attn_bias=attn_bias))  # type: ignore
 
     outputs = []
@@ -198,7 +198,7 @@ def drop_add_residual_stochastic_depth_list(
 class NestedTensorBlock(Block):
     def forward_nested(self, x_list: List[Tensor]) -> List[Tensor]:
         """
-        x_list contains a list of tensors to nest together and run
+        x_list包含要嵌套在一起并运行的张量列表
         """
         assert isinstance(self.attn, MemEffAttention)
 
@@ -241,7 +241,7 @@ class NestedTensorBlock(Block):
             return super().forward(x_or_x_list)
         elif isinstance(x_or_x_list, list):
             if not XFORMERS_AVAILABLE:
-                raise AssertionError("xFormers is required for using nested tensors")
+                raise AssertionError("使用嵌套张量需要xFormers")
             return self.forward_nested(x_or_x_list)
         else:
             raise AssertionError

@@ -12,80 +12,80 @@ import numpy as np
 
 def load_and_preprocess_images_square(image_path_list, target_size=1024):
     """
-    Load and preprocess images by center padding to square and resizing to target size.
-    Also returns the position information of original pixels after transformation.
+    通过中心填充至正方形并调整大小至目标尺寸来加载和预处理图像。
+    同时返回原始像素在转换后的位置信息。
 
-    Args:
-        image_path_list (list): List of paths to image files
-        target_size (int, optional): Target size for both width and height. Defaults to 518.
+    参数:
+        image_path_list (list): 图像文件路径列表
+        target_size (int, optional): 宽度和高度的目标尺寸。默认为518。
 
-    Returns:
+    返回:
         tuple: (
-            torch.Tensor: Batched tensor of preprocessed images with shape (N, 3, target_size, target_size),
-            torch.Tensor: Array of shape (N, 5) containing [x1, y1, x2, y2, width, height] for each image
+            torch.Tensor: 预处理后的批量图像张量，形状为 (N, 3, target_size, target_size),
+            torch.Tensor: 形状为 (N, 5) 的数组，包含每张图像的 [x1, y1, x2, y2, width, height]
         )
 
-    Raises:
-        ValueError: If the input list is empty
+    异常:
+        ValueError: 如果输入列表为空
     """
-    # Check for empty list
+    # 检查是否为空列表
     if len(image_path_list) == 0:
-        raise ValueError("At least 1 image is required")
+        raise ValueError("至少需要1张图像")
 
     images = []
-    original_coords = []  # Renamed from position_info to be more descriptive
+    original_coords = []  # 重命名为更具描述性的名称
     to_tensor = TF.ToTensor()
 
     for image_path in image_path_list:
-        # Open image
+        # 打开图像
         img = Image.open(image_path)
 
-        # If there's an alpha channel, blend onto white background
+        # 如果有alpha通道，混合到白色背景上
         if img.mode == "RGBA":
             background = Image.new("RGBA", img.size, (255, 255, 255, 255))
             img = Image.alpha_composite(background, img)
 
-        # Convert to RGB
+        # 转换为RGB
         img = img.convert("RGB")
 
-        # Get original dimensions
+        # 获取原始尺寸
         width, height = img.size
 
-        # Make the image square by padding the shorter dimension
+        # 通过填充较短的维度使图像成为正方形
         max_dim = max(width, height)
 
-        # Calculate padding
+        # 计算填充
         left = (max_dim - width) // 2
         top = (max_dim - height) // 2
 
-        # Calculate scale factor for resizing
+        # 计算调整大小的缩放因子
         scale = target_size / max_dim
 
-        # Calculate final coordinates of original image in target space
+        # 计算原始图像在目标空间中的最终坐标
         x1 = left * scale
         y1 = top * scale
         x2 = (left + width) * scale
         y2 = (top + height) * scale
 
-        # Store original image coordinates and scale
+        # 存储原始图像坐标和缩放
         original_coords.append(np.array([x1, y1, x2, y2, width, height]))
 
-        # Create a new black square image and paste original
+        # 创建一个新的黑色正方形图像并粘贴原始图像
         square_img = Image.new("RGB", (max_dim, max_dim), (0, 0, 0))
         square_img.paste(img, (left, top))
 
-        # Resize to target size
+        # 调整大小至目标尺寸
         square_img = square_img.resize((target_size, target_size), Image.Resampling.BICUBIC)
 
-        # Convert to tensor
+        # 转换为张量
         img_tensor = to_tensor(square_img)
         images.append(img_tensor)
 
-    # Stack all images
+    # 堆叠所有图像
     images = torch.stack(images)
     original_coords = torch.from_numpy(np.array(original_coords)).float()
 
-    # Add additional dimension if single image to ensure correct shape
+    # 如果是单张图像，添加额外维度以确保正确的形状
     if len(image_path_list) == 1:
         if images.dim() == 3:
             images = images.unsqueeze(0)
@@ -96,85 +96,85 @@ def load_and_preprocess_images_square(image_path_list, target_size=1024):
 
 def load_and_preprocess_images(image_path_list, mode="crop"):
     """
-    A quick start function to load and preprocess images for model input.
-    This assumes the images should have the same shape for easier batching, but our model can also work well with different shapes.
+    快速启动函数，用于加载和预处理图像以供模型输入。
+    这假设图像应具有相同的形状以便于批处理，但我们的模型也可以很好地处理不同形状的图像。
 
-    Args:
-        image_path_list (list): List of paths to image files
-        mode (str, optional): Preprocessing mode, either "crop" or "pad".
-                             - "crop" (default): Sets width to 518px and center crops height if needed.
-                             - "pad": Preserves all pixels by making the largest dimension 518px
-                               and padding the smaller dimension to reach a square shape.
+    参数:
+        image_path_list (list): 图像文件路径列表
+        mode (str, optional): 预处理模式，"crop" 或 "pad"。
+                             - "crop" (默认): 将宽度设置为518px，如果需要则中心裁剪高度。
+                             - "pad": 通过使最大维度为518px来保留所有像素，
+                               并填充较小的维度以达到正方形形状。
 
-    Returns:
-        torch.Tensor: Batched tensor of preprocessed images with shape (N, 3, H, W)
+    返回:
+        torch.Tensor: 预处理后的批量图像张量，形状为 (N, 3, H, W)
 
-    Raises:
-        ValueError: If the input list is empty or if mode is invalid
+    异常:
+        ValueError: 如果输入列表为空或模式无效
 
-    Notes:
-        - Images with different dimensions will be padded with white (value=1.0)
-        - A warning is printed when images have different shapes
-        - When mode="crop": The function ensures width=518px while maintaining aspect ratio
-          and height is center-cropped if larger than 518px
-        - When mode="pad": The function ensures the largest dimension is 518px while maintaining aspect ratio
-          and the smaller dimension is padded to reach a square shape (518x518)
-        - Dimensions are adjusted to be divisible by 14 for compatibility with model requirements
+    注意:
+        - 不同尺寸的图像将用白色填充（值=1.0）
+        - 当图像有不同形状时会打印警告
+        - 当 mode="crop" 时：函数确保宽度=518px，同时保持纵横比，
+          如果高度大于518px，则进行中心裁剪
+        - 当 mode="pad" 时：函数确保最大维度为518px，同时保持纵横比，
+          较小的维度被填充以达到正方形形状（518x518）
+        - 尺寸被调整为可被14整除，以兼容模型要求
     """
-    # Check for empty list
+    # 检查是否为空列表
     if len(image_path_list) == 0:
-        raise ValueError("At least 1 image is required")
+        raise ValueError("至少需要1张图像")
 
-    # Validate mode
+    # 验证模式
     if mode not in ["crop", "pad"]:
-        raise ValueError("Mode must be either 'crop' or 'pad'")
+        raise ValueError("模式必须是 'crop' 或 'pad'")
 
     images = []
     shapes = set()
     to_tensor = TF.ToTensor()
     target_size = 518
 
-    # First process all images and collect their shapes
+    # 首先处理所有图像并收集它们的形状
     for image_path in image_path_list:
-        # Open image
+        # 打开图像
         img = Image.open(image_path)
 
-        # If there's an alpha channel, blend onto white background:
+        # 如果有alpha通道，混合到白色背景上：
         if img.mode == "RGBA":
-            # Create white background
+            # 创建白色背景
             background = Image.new("RGBA", img.size, (255, 255, 255, 255))
-            # Alpha composite onto the white background
+            # Alpha合成到白色背景上
             img = Image.alpha_composite(background, img)
 
-        # Now convert to "RGB" (this step assigns white for transparent areas)
+        # 现在转换为"RGB"（此步骤为透明区域分配白色）
         img = img.convert("RGB")
 
         width, height = img.size
 
         if mode == "pad":
-            # Make the largest dimension 518px while maintaining aspect ratio
+            # 使最大维度为518px，同时保持纵横比
             if width >= height:
                 new_width = target_size
-                new_height = round(height * (new_width / width) / 14) * 14  # Make divisible by 14
+                new_height = round(height * (new_width / width) / 14) * 14  # 使其可被14整除
             else:
                 new_height = target_size
-                new_width = round(width * (new_height / height) / 14) * 14  # Make divisible by 14
+                new_width = round(width * (new_height / height) / 14) * 14  # 使其可被14整除
         else:  # mode == "crop"
-            # Original behavior: set width to 518px
+            # 原始行为：将宽度设置为518px
             new_width = target_size
-            # Calculate height maintaining aspect ratio, divisible by 14
+            # 计算保持纵横比的高度，可被14整除
             new_height = round(height * (new_width / width) / 14) * 14
 
-        # Resize with new dimensions (width, height)
+        # 使用新尺寸调整大小 (width, height)
         img = img.resize((new_width, new_height), Image.Resampling.BICUBIC)
-        img = to_tensor(img)  # Convert to tensor (0, 1)
+        img = to_tensor(img)  # 转换为张量 (0, 1)
 
-        # Center crop height if it's larger than 518 (only in crop mode)
+        # 如果高度大于518，则中心裁剪高度（仅在裁剪模式下）
         if mode == "crop" and new_height > target_size:
             start_y = (new_height - target_size) // 2
             img = img[:, start_y : start_y + target_size, :]
 
-        # For pad mode, pad to make a square of target_size x target_size
+        # 对于pad模式，填充以制作target_size x target_size的正方形
         if mode == "pad":
             h_padding = target_size - img.shape[1]
             w_padding = target_size - img.shape[2]
@@ -185,7 +185,7 @@ def load_and_preprocess_images(image_path_list, mode="crop"):
                 pad_left = w_padding // 2
                 pad_right = w_padding - pad_left
 
-                # Pad with white (value=1.0)
+                # 用白色填充（值=1.0）
                 img = torch.nn.functional.pad(
                     img, (pad_left, pad_right, pad_top, pad_bottom), mode="constant", value=1.0
                 )
@@ -193,15 +193,15 @@ def load_and_preprocess_images(image_path_list, mode="crop"):
         shapes.add((img.shape[1], img.shape[2]))
         images.append(img)
 
-    # Check if we have different shapes
-    # In theory our model can also work well with different shapes
+    # 检查是否有不同的形状
+    # 理论上我们的模型也可以很好地处理不同形状的图像
     if len(shapes) > 1:
-        print(f"Warning: Found images with different shapes: {shapes}")
-        # Find maximum dimensions
+        print(f"警告：发现具有不同形状的图像：{shapes}")
+        # 找出最大尺寸
         max_height = max(shape[0] for shape in shapes)
         max_width = max(shape[1] for shape in shapes)
 
-        # Pad images if necessary
+        # 如有必要，填充图像
         padded_images = []
         for img in images:
             h_padding = max_height - img.shape[1]
@@ -219,11 +219,11 @@ def load_and_preprocess_images(image_path_list, mode="crop"):
             padded_images.append(img)
         images = padded_images
 
-    images = torch.stack(images)  # concatenate images
+    images = torch.stack(images)  # 连接图像
 
-    # Ensure correct shape when single image
+    # 确保单张图像时的正确形状
     if len(image_path_list) == 1:
-        # Verify shape is (1, C, H, W)
+        # 验证形状是 (1, C, H, W)
         if images.dim() == 3:
             images = images.unsqueeze(0)
 
