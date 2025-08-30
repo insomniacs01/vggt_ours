@@ -5,26 +5,27 @@ Experiment: detection_3d
 Model: VGGT
 Epochs: 10
 Learning rate: 0.0001
-2025-08-30 16:17:13,594 - 使用MLP层作为FFN
-2025-08-30 16:17:23,655 - Detection3DDataset initialized: 179 train samples
-2025-08-30 16:17:23,655 - Dataset length set to: 179
-2025-08-30 16:17:23,671 - Detection3DDataset initialized: 36 test samples
-2025-08-30 16:17:23,671 - Dataset length set to: 36
+2025-08-30 16:46:24,180 - 使用MLP层作为FFN
+2025-08-30 16:46:33,295 - Detection3DDataset initialized: 40 train samples
+2025-08-30 16:46:33,295 - Dataset length set to: 40
+2025-08-30 16:46:33,305 - Detection3DDataset initialized: 1 test samples
+2025-08-30 16:46:33,305 - Dataset length set to: 1
 /home/admin123/vggt_ours1/training/trainer.py:25: FutureWarning:
 
 `torch.cuda.amp.GradScaler(args...)` is deprecated. Please use `torch.amp.GradScaler('cuda', args...)` instead.
 
-2025-08-30 16:17:23,671 -
+2025-08-30 16:46:33,306 -
 Epoch 1/10
 Building dynamic dataloader with epoch: 0
-No valid query points in detection3d_000020
+No valid query points in detection3d_000032
 /home/admin123/vggt_ours/.venv/lib/python3.8/site-packages/kornia/feature/lightglue.py:44: FutureWarning:
 
 `torch.cuda.amp.custom_fwd(args...)` is deprecated. Please use `torch.amp.custom_fwd(args..., device_type='cuda')` instead.
 
+No valid query points in detection3d_000038
 [DEBUG Trainer] prepare_batch input:
   gt_boxes type: <class 'list'>
-  gt_boxes list length: 1
+  gt_boxes list length: 2
 /home/admin123/vggt_ours1/training/trainer.py:117: FutureWarning:
 
 `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
@@ -37,215 +38,777 @@ No valid query points in detection3d_000020
 
 To copy construct from a tensor, it is recommended to use sourceTensor.clone().detach() or sourceTensor.clone().detach().requires_grad_(True), rather than torch.tensor(sourceTensor).
 
-2025-08-30 16:17:26,001 - Step 1: loss_det_center=397.2342, loss_det_obj=1.9301, loss_detection=399.1643, loss_objective=798.3286 | Pos samples: 400
-No valid query points in detection3d_000080
-No valid query points in detection3d_000144
-2025-08-30 16:17:27,228 - Step 2: loss_det_center=242.3363, loss_det_obj=2.6559, loss_unmatched_gt=0.0000, loss_detection=244.9922, loss_objective=489.9845 | Pos samples: 400
-No valid query points in detection3d_000102
-No valid query points in detection3d_000017
-2025-08-30 16:17:28,325 - Step 3: loss_det_center=282.2278, loss_det_obj=2.2895, loss_unmatched_gt=0.0000, loss_detection=284.5172, loss_objective=569.0345 | Pos samples: 400
-No valid query points in detection3d_000208
-No valid query points in detection3d_000018
-2025-08-30 16:17:29,883 - Step 4: loss_det_center=262.8257, loss_det_obj=2.1660, loss_unmatched_gt=0.0000, loss_detection=264.9917, loss_objective=529.9833 | Pos samples: 400
-No valid query points in detection3d_000130
-2025-08-30 16:17:31,895 - Step 5: loss_det_center=145.5845, loss_det_obj=2.3982, loss_unmatched_gt=0.0000, loss_detection=147.9827, loss_objective=295.9654 | Pos samples: 400
-No valid query points in detection3d_000186
-2025-08-30 16:17:33,004 - Step 6: loss_det_center=125.0910, loss_det_obj=1.8282, loss_unmatched_gt=0.0000, loss_detection=126.9192, loss_objective=253.8383 | Pos samples: 270
-No valid query points in detection3d_000098
-2025-08-30 16:17:34,090 - Step 7: loss_det_center=173.6176, loss_det_obj=1.8092, loss_unmatched_gt=0.0000, loss_detection=175.4269, loss_objective=350.8537 | Pos samples: 24
-No valid query points in detection3d_000031
-No valid query points in detection3d_000352
-2025-08-30 16:17:35,602 - Step 8: loss_det_center=209.4608, loss_det_obj=1.8910, loss_unmatched_gt=0.0000, loss_detection=211.3518, loss_objective=422.7036 | Pos samples: 6
-No valid query points in detection3d_000092
-No valid query points in detection3d_000392
-2025-08-30 16:17:37,176 - Step 9: loss_det_center=160.2256, loss_det_obj=2.0094, loss_unmatched_gt=0.0000, loss_detection=162.2350, loss_objective=324.4701 | Pos samples: 3
-No valid query points in detection3d_000362
-No valid query points in detection3d_000174
-2025-08-30 16:17:38,799 - Step 10: loss_det_center=156.2425, loss_det_obj=1.8756, loss_unmatched_gt=0.0000, loss_detection=158.1180, loss_objective=316.2361 | Pos samples: 1
-No valid query points in detection3d_000190
-2025-08-30 16:17:40,381 - Step 11: loss_det_center=142.8277, loss_det_obj=1.7015, loss_unmatched_gt=0.0000, loss_detection=144.5293, loss_objective=289.0586 | Pos samples: 1
-No valid query points in detection3d_000140
-No valid query points in detection3d_000136
-2025-08-30 16:17:42,084 - Step 12: loss_det_center=132.8882, loss_det_obj=1.8269, loss_unmatched_gt=0.0000, loss_detection=134.7151, loss_objective=269.4301 | Pos samples: 1
-No valid query points in detection3d_000186
-No valid query points in detection3d_000190
-2025-08-30 16:17:44,291 - Step 13: loss_det_center=130.0297, loss_det_obj=1.8208, loss_unmatched_gt=0.0000, loss_detection=131.8505, loss_objective=263.7010 | Pos samples: 1
-No valid query points in detection3d_000302
-2025-08-30 16:17:46,981 - Step 14: loss_det_center=75.7370, loss_det_obj=2.0219, loss_unmatched_gt=0.0000, loss_detection=77.7590, loss_objective=155.5179 | Pos samples: 3
-No valid query points in detection3d_000170
-No valid query points in detection3d_000202
-2025-08-30 16:17:49,047 - Step 15: loss_det_center=124.4049, loss_det_obj=2.0285, loss_unmatched_gt=0.0000, loss_detection=126.4334, loss_objective=252.8668 | Pos samples: 0
-No valid query points in detection3d_000222
-2025-08-30 16:17:52,914 - Step 16: loss_det_center=138.0886, loss_det_obj=1.5142, loss_unmatched_gt=0.0000, loss_detection=139.6028, loss_objective=279.2057 | Pos samples: 0
-No valid query points in detection3d_000023
-2025-08-30 16:17:55,539 - Step 17: loss_det_center=295.4132, loss_det_obj=1.5937, loss_detection=297.0069, loss_objective=594.0137 | Pos samples: 0
-No valid query points in detection3d_000316
-2025-08-30 16:17:57,491 - Step 18: loss_det_center=74.3625, loss_det_obj=1.7446, loss_unmatched_gt=0.0000, loss_detection=76.1071, loss_objective=152.2142 | Pos samples: 0
-No valid query points in detection3d_000003
-No valid query points in detection3d_000196
-2025-08-30 16:18:00,595 - Step 19: loss_det_center=216.4353, loss_det_obj=1.0755, loss_unmatched_gt=0.0000, loss_detection=217.5108, loss_objective=435.0217 | Pos samples: 0
-No valid query points in detection3d_000222
-2025-08-30 16:18:02,705 - Step 20: loss_det_center=176.6608, loss_det_obj=2.0869, loss_unmatched_gt=0.0000, loss_detection=178.7477, loss_objective=357.4954 | Pos samples: 0
-No valid query points in detection3d_000270
-No valid query points in detection3d_000244
-2025-08-30 16:18:05,813 - Step 21: loss_det_center=132.2726, loss_det_obj=1.4566, loss_unmatched_gt=0.0000, loss_detection=133.7292, loss_objective=267.4585 | Pos samples: 1
-No valid query points in detection3d_000036
-2025-08-30 16:18:10,155 - Step 22: loss_det_center=336.5999, loss_det_obj=1.2952, loss_detection=337.8951, loss_objective=675.7902 | Pos samples: 0
-No valid query points in detection3d_000092
-2025-08-30 16:18:12,446 - Step 23: loss_det_center=125.1366, loss_det_obj=2.1476, loss_unmatched_gt=0.0000, loss_detection=127.2842, loss_objective=254.5685 | Pos samples: 0
-No valid query points in detection3d_000016
-No valid query points in detection3d_000322
-2025-08-30 16:18:17,216 - Step 24: loss_det_center=193.7636, loss_det_obj=1.5821, loss_unmatched_gt=0.0000, loss_detection=195.3457, loss_objective=390.6915 | Pos samples: 1
+2025-08-30 16:46:35,475 - Step 1: loss_det_center=392.8090, loss_det_obj=2.1550, loss_detection=394.9640, loss_objective=789.9280 | Pos samples: 400
 No valid query points in detection3d_000039
-2025-08-30 16:18:22,632 - Step 25: loss_det_center=314.5590, loss_det_obj=1.5742, loss_detection=316.1331, loss_objective=632.2663 | Pos samples: 0
-No valid query points in detection3d_000031
-2025-08-30 16:18:25,404 - Step 26: loss_det_center=277.2924, loss_det_obj=1.5005, loss_detection=278.7928, loss_objective=557.5856 | Pos samples: 0
-No valid query points in detection3d_000152
-2025-08-30 16:18:28,944 - Step 27: loss_det_center=109.4341, loss_det_obj=1.8612, loss_unmatched_gt=0.0000, loss_detection=111.2953, loss_objective=222.5906 | Pos samples: 1
-No valid query points in detection3d_000352
-2025-08-30 16:18:33,653 - Step 28: loss_det_center=100.4076, loss_det_obj=2.1937, loss_unmatched_gt=0.0000, loss_detection=102.6014, loss_objective=205.2027 | Pos samples: 1
-No valid query points in detection3d_000035
-No valid query points in detection3d_000346
-2025-08-30 16:18:37,009 - Step 29: loss_det_center=187.1260, loss_det_obj=2.2196, loss_unmatched_gt=0.0000, loss_detection=189.3456, loss_objective=378.6912 | Pos samples: 1
-No valid query points in detection3d_000314
-No valid query points in detection3d_000316
-2025-08-30 16:18:40,860 - Step 30: loss_det_center=89.4448, loss_det_obj=2.0890, loss_unmatched_gt=0.0000, loss_detection=91.5339, loss_objective=183.0677 | Pos samples: 3
-No valid query points in detection3d_000374
-2025-08-30 16:18:43,322 - Step 31: loss_det_center=103.3469, loss_det_obj=2.0419, loss_unmatched_gt=0.0000, loss_detection=105.3888, loss_objective=210.7775 | Pos samples: 2
-No valid query points in detection3d_000254
-2025-08-30 16:18:48,365 - Step 32: loss_det_center=126.3047, loss_det_obj=1.6687, loss_unmatched_gt=0.0000, loss_detection=127.9734, loss_objective=255.9468 | Pos samples: 0
-No valid query points in detection3d_000182
-No valid query points in detection3d_000400
-2025-08-30 16:18:53,355 - Step 33: loss_det_center=148.0905, loss_det_obj=2.1271, loss_unmatched_gt=0.0000, loss_detection=150.2177, loss_objective=300.4354 | Pos samples: 2
-No valid query points in detection3d_000234
-No valid query points in detection3d_000380
-2025-08-30 16:18:57,059 - Step 34: loss_det_center=94.4371, loss_det_obj=1.7339, loss_unmatched_gt=0.0000, loss_detection=96.1710, loss_objective=192.3420 | Pos samples: 0
-No valid query points in detection3d_000144
-2025-08-30 16:19:01,637 - Step 35: loss_det_center=107.2566, loss_det_obj=2.0311, loss_unmatched_gt=0.0000, loss_detection=109.2876, loss_objective=218.5753 | Pos samples: 0
-No valid query points in detection3d_000320
-No valid query points in detection3d_000222
-2025-08-30 16:19:06,945 - Step 36: loss_det_center=96.3887, loss_det_obj=1.6171, loss_unmatched_gt=0.0000, loss_detection=98.0058, loss_objective=196.0117 | Pos samples: 0
-No valid query points in detection3d_000072
-2025-08-30 16:19:12,432 - Step 37: loss_det_center=112.9386, loss_det_obj=2.1350, loss_unmatched_gt=0.0000, loss_detection=115.0736, loss_objective=230.1472 | Pos samples: 0
+2025-08-30 16:46:36,741 - Step 2: loss_det_center=393.7804, loss_det_obj=2.1135, loss_detection=395.8939, loss_objective=791.7877 | Pos samples: 43
 No valid query points in detection3d_000005
-2025-08-30 16:19:17,287 - Step 38: loss_det_center=272.2220, loss_det_obj=1.5915, loss_detection=273.8135, loss_objective=547.6270 | Pos samples: 0
-No valid query points in detection3d_000320
-2025-08-30 16:19:22,414 - Step 39: loss_det_center=74.9402, loss_det_obj=1.8535, loss_unmatched_gt=0.0000, loss_detection=76.7937, loss_objective=153.5874 | Pos samples: 0
-No valid query points in detection3d_000112
-2025-08-30 16:19:32,230 - Step 40: loss_det_center=99.7127, loss_det_obj=1.2483, loss_unmatched_gt=0.0000, loss_detection=100.9610, loss_objective=201.9219 | Pos samples: 0
-No valid query points in detection3d_000322
-2025-08-30 16:19:38,426 - Step 41: loss_det_center=81.5641, loss_det_obj=1.4636, loss_unmatched_gt=0.0000, loss_detection=83.0277, loss_objective=166.0554 | Pos samples: 0
-No valid query points in detection3d_000210
-2025-08-30 16:19:46,415 - Step 42: loss_det_center=158.9835, loss_det_obj=1.5131, loss_unmatched_gt=0.0000, loss_detection=160.4966, loss_objective=320.9932 | Pos samples: 0
-No valid query points in detection3d_000224
-2025-08-30 16:19:53,944 - Step 43: loss_det_center=144.3706, loss_det_obj=1.1584, loss_unmatched_gt=0.0000, loss_detection=145.5290, loss_objective=291.0580 | Pos samples: 0
-No valid query points in detection3d_000294
-No valid query points in detection3d_000074
-2025-08-30 16:20:02,533 - Step 44: loss_det_center=128.4828, loss_det_obj=1.5847, loss_unmatched_gt=0.0000, loss_detection=130.0675, loss_objective=260.1350 | Pos samples: 0
-No valid query points in detection3d_000108
-2025-08-30 16:20:09,589 - Step 45: loss_det_center=180.9724, loss_det_obj=1.8841, loss_unmatched_gt=0.0000, loss_detection=182.8564, loss_objective=365.7129 | Pos samples: 0
-No valid query points in detection3d_000018
-2025-08-30 16:20:13,939 - Step 46: loss_det_center=349.1359, loss_det_obj=1.0497, loss_detection=350.1856, loss_objective=700.3712 | Pos samples: 0
-No valid query points in detection3d_000350
-No valid query points in detection3d_000035
-2025-08-30 16:20:22,676 - Step 47: loss_det_center=203.4034, loss_det_obj=1.0373, loss_unmatched_gt=0.0000, loss_detection=204.4407, loss_objective=408.8813 | Pos samples: 0
-No valid query points in detection3d_000018
-No valid query points in detection3d_000210
-2025-08-30 16:20:30,331 - Step 48: loss_det_center=218.2915, loss_det_obj=1.2990, loss_unmatched_gt=0.0000, loss_detection=219.5905, loss_objective=439.1811 | Pos samples: 0
-No valid query points in detection3d_000134
-No valid query points in detection3d_000380
-2025-08-30 16:20:38,978 - Step 49: loss_det_center=133.9555, loss_det_obj=1.6837, loss_unmatched_gt=0.0000, loss_detection=135.6392, loss_objective=271.2784 | Pos samples: 0
-No valid query points in detection3d_000368
-2025-08-30 16:20:50,021 - Step 50: loss_det_center=102.8082, loss_det_obj=1.8944, loss_unmatched_gt=0.0000, loss_detection=104.7025, loss_objective=209.4051 | Pos samples: 0
-No valid query points in detection3d_000260
-2025-08-30 16:21:01,218 - Step 51: loss_det_center=132.2586, loss_det_obj=1.0540, loss_unmatched_gt=0.0000, loss_detection=133.3127, loss_objective=266.6253 | Pos samples: 0
+2025-08-30 16:46:37,869 - Step 3: loss_det_center=342.2433, loss_det_obj=1.9913, loss_detection=344.2347, loss_objective=688.4694 | Pos samples: 4
+[DEBUG Composed] Received from base_dataset:
+  gt_boxes type: <class 'numpy.ndarray'>
+  gt_boxes shape: (27, 7)
+No valid query points in detection3d_000013
+2025-08-30 16:46:39,514 - Step 4: loss_det_center=265.2451, loss_det_obj=1.5409, loss_detection=266.7860, loss_objective=533.5720 | Pos samples: 0
+No valid query points in detection3d_000016
 No valid query points in detection3d_000039
-No valid query points in detection3d_000170
-2025-08-30 16:21:07,033 - Step 52: loss_det_center=216.1460, loss_det_obj=1.2887, loss_unmatched_gt=0.0000, loss_detection=217.4347, loss_objective=434.8694 | Pos samples: 0
-No valid query points in detection3d_000358
-2025-08-30 16:21:18,630 - Step 53: loss_det_center=75.0388, loss_det_obj=1.9381, loss_unmatched_gt=0.0000, loss_detection=76.9769, loss_objective=153.9538 | Pos samples: 0
-No valid query points in detection3d_000118
-2025-08-30 16:21:26,552 - Step 54: loss_det_center=100.9789, loss_det_obj=1.2374, loss_unmatched_gt=0.0000, loss_detection=102.2163, loss_objective=204.4327 | Pos samples: 0
-No valid query points in detection3d_000012
-No valid query points in detection3d_000340
-2025-08-30 16:21:32,216 - Step 55: loss_det_center=239.2770, loss_det_obj=1.8343, loss_unmatched_gt=0.0000, loss_detection=241.1113, loss_objective=482.2227 | Pos samples: 0
-No valid query points in detection3d_000130
-2025-08-30 16:21:37,248 - Step 56: loss_det_center=105.3257, loss_det_obj=1.3438, loss_unmatched_gt=0.0000, loss_detection=106.6695, loss_objective=213.3389 | Pos samples: 0
-No valid query points in detection3d_000324
-2025-08-30 16:21:40,776 - Step 57: loss_det_center=63.0079, loss_det_obj=1.4073, loss_unmatched_gt=0.0000, loss_detection=64.4152, loss_objective=128.8305 | Pos samples: 0
-No valid query points in detection3d_000130
-2025-08-30 16:21:44,918 - Step 58: loss_det_center=96.8688, loss_det_obj=1.1773, loss_unmatched_gt=0.0000, loss_detection=98.0461, loss_objective=196.0922 | Pos samples: 0
-No valid query points in detection3d_000023
-No valid query points in detection3d_000150
-2025-08-30 16:21:53,291 - Step 59: loss_det_center=192.0869, loss_det_obj=1.7384, loss_unmatched_gt=0.0000, loss_detection=193.8254, loss_objective=387.6508 | Pos samples: 0
-No valid query points in detection3d_000018
-2025-08-30 16:22:02,958 - Step 60: loss_det_center=344.4085, loss_det_obj=2.0284, loss_detection=346.4368, loss_objective=692.8737 | Pos samples: 4
-No valid query points in detection3d_000224
-2025-08-30 16:22:08,909 - Step 61: loss_det_center=84.2918, loss_det_obj=1.5591, loss_unmatched_gt=0.0000, loss_detection=85.8509, loss_objective=171.7018 | Pos samples: 0
-No valid query points in detection3d_000296
-2025-08-30 16:22:16,283 - Step 62: loss_det_center=54.9290, loss_det_obj=1.1395, loss_unmatched_gt=0.0000, loss_detection=56.0685, loss_objective=112.1370 | Pos samples: 0
-No valid query points in detection3d_000013
-No valid query points in detection3d_000086
-2025-08-30 16:22:21,881 - Step 63: loss_det_center=204.6143, loss_det_obj=1.4683, loss_unmatched_gt=0.0000, loss_detection=206.0826, loss_objective=412.1652 | Pos samples: 0
-No valid query points in detection3d_000364
-No valid query points in detection3d_000386
-2025-08-30 16:22:29,260 - Step 64: loss_det_center=88.5849, loss_det_obj=2.0731, loss_unmatched_gt=0.0000, loss_detection=90.6580, loss_objective=181.3159 | Pos samples: 0
-No valid query points in detection3d_000009
-2025-08-30 16:22:37,049 - Step 65: loss_det_center=305.6076, loss_det_obj=1.6706, loss_detection=307.2782, loss_objective=614.5564 | Pos samples: 0
-No valid query points in detection3d_000360
+2025-08-30 16:46:41,715 - Step 5: loss_det_center=256.5940, loss_det_obj=1.7030, loss_detection=258.2969, loss_objective=516.5939 | Pos samples: 1
 No valid query points in detection3d_000000
-2025-08-30 16:22:43,943 - Step 66: loss_det_center=187.5470, loss_det_obj=1.5555, loss_unmatched_gt=0.0000, loss_detection=189.1025, loss_objective=378.2050 | Pos samples: 0
+2025-08-30 16:46:42,936 - Step 6: loss_det_center=252.9630, loss_det_obj=1.8881, loss_detection=254.8511, loss_objective=509.7022 | Pos samples: 3
+No valid query points in detection3d_000001
+2025-08-30 16:46:44,062 - Step 7: loss_det_center=295.9269, loss_det_obj=1.8013, loss_detection=297.7281, loss_objective=595.4563 | Pos samples: 10
+No valid query points in detection3d_000019
+2025-08-30 16:46:45,417 - Step 8: loss_det_center=249.3309, loss_det_obj=1.8927, loss_detection=251.2236, loss_objective=502.4472 | Pos samples: 4
+No valid query points in detection3d_000020
+2025-08-30 16:46:46,742 - Step 9: loss_det_center=247.2928, loss_det_obj=1.8066, loss_detection=249.0994, loss_objective=498.1988 | Pos samples: 4
+No valid query points in detection3d_000009
+2025-08-30 16:46:47,749 - Step 10: loss_det_center=210.6358, loss_det_obj=1.8172, loss_detection=212.4530, loss_objective=424.9061 | Pos samples: 3
+No valid query points in detection3d_000019
 No valid query points in detection3d_000022
-2025-08-30 16:22:48,651 - Step 67: loss_det_center=304.0076, loss_det_obj=1.6237, loss_detection=305.6313, loss_objective=611.2627 | Pos samples: 0
-No valid query points in detection3d_000224
-No valid query points in detection3d_000256
-2025-08-30 16:22:54,295 - Step 68: loss_det_center=84.7453, loss_det_obj=1.2050, loss_unmatched_gt=0.0000, loss_detection=85.9503, loss_objective=171.9005 | Pos samples: 0
-No valid query points in detection3d_000248
-No valid query points in detection3d_000078
-2025-08-30 16:23:03,735 - Step 69: loss_det_center=110.6903, loss_det_obj=1.5536, loss_unmatched_gt=0.0000, loss_detection=112.2439, loss_objective=224.4878 | Pos samples: 0
-No valid query points in detection3d_000340
-2025-08-30 16:23:11,601 - Step 70: loss_det_center=75.6837, loss_det_obj=1.6319, loss_unmatched_gt=0.0000, loss_detection=77.3156, loss_objective=154.6311 | Pos samples: 0
-No valid query points in detection3d_000176
+2025-08-30 16:46:49,106 - Step 11: loss_det_center=260.2466, loss_det_obj=1.9272, loss_detection=262.1738, loss_objective=524.3476 | Pos samples: 3
+No valid query points in detection3d_000031
+No valid query points in detection3d_000034
+2025-08-30 16:46:50,429 - Step 12: loss_det_center=234.6652, loss_det_obj=1.6457, loss_detection=236.3109, loss_objective=472.6217 | Pos samples: 4
+No valid query points in detection3d_000015
+2025-08-30 16:46:51,862 - Step 13: loss_det_center=213.5825, loss_det_obj=1.8648, loss_detection=215.4473, loss_objective=430.8945 | Pos samples: 3
+No valid query points in detection3d_000019
+2025-08-30 16:46:53,178 - Step 14: loss_det_center=216.8768, loss_det_obj=2.1176, loss_detection=218.9944, loss_objective=437.9887 | Pos samples: 3
+No valid query points in detection3d_000027
+No valid query points in detection3d_000021
+2025-08-30 16:46:54,880 - Step 15: loss_det_center=249.7329, loss_det_obj=1.9737, loss_detection=251.7066, loss_objective=503.4132 | Pos samples: 4
 No valid query points in detection3d_000018
-2025-08-30 16:23:17,022 - Step 71: loss_det_center=211.2657, loss_det_obj=1.6408, loss_unmatched_gt=0.0000, loss_detection=212.9066, loss_objective=425.8132 | Pos samples: 0
-No valid query points in detection3d_000022
-2025-08-30 16:23:25,360 - Step 72: loss_det_center=313.0110, loss_det_obj=1.6585, loss_detection=314.6695, loss_objective=629.3389 | Pos samples: 0
-No valid query points in detection3d_000008
-2025-08-30 16:23:37,681 - Step 73: loss_det_center=271.3628, loss_det_obj=1.7075, loss_detection=273.0703, loss_objective=546.1406 | Pos samples: 0
-No valid query points in detection3d_000358
-No valid query points in detection3d_000078
-2025-08-30 16:23:48,925 - Step 74: loss_det_center=87.7554, loss_det_obj=1.9287, loss_unmatched_gt=0.0000, loss_detection=89.6842, loss_objective=179.3683 | Pos samples: 0
-No valid query points in detection3d_000410
-No valid query points in detection3d_000380
-2025-08-30 16:23:55,078 - Step 75: loss_det_center=117.7256, loss_det_obj=2.3972, loss_unmatched_gt=0.0000, loss_detection=120.1228, loss_objective=240.2456 | Pos samples: 0
-No valid query points in detection3d_000092
-No valid query points in detection3d_000276
-2025-08-30 16:24:02,690 - Step 76: loss_det_center=82.4668, loss_det_obj=1.3922, loss_unmatched_gt=0.0000, loss_detection=83.8590, loss_objective=167.7180 | Pos samples: 0
-No valid query points in detection3d_000004
-No valid query points in detection3d_000262
-2025-08-30 16:24:14,741 - Step 77: loss_det_center=179.6990, loss_det_obj=1.2971, loss_unmatched_gt=0.0000, loss_detection=180.9962, loss_objective=361.9923 | Pos samples: 0
+2025-08-30 16:46:57,782 - Step 16: loss_det_center=269.0314, loss_det_obj=2.4303, loss_detection=271.4618, loss_objective=542.9235 | Pos samples: 3
+No valid query points in detection3d_000027
+2025-08-30 16:47:00,256 - Step 17: loss_det_center=306.0321, loss_det_obj=2.4052, loss_detection=308.4374, loss_objective=616.8748 | Pos samples: 3
+No valid query points in detection3d_000027
+2025-08-30 16:47:02,019 - Step 18: loss_det_center=323.8553, loss_det_obj=2.4241, loss_detection=326.2794, loss_objective=652.5588 | Pos samples: 3
+No valid query points in detection3d_000031
+2025-08-30 16:47:03,738 - Step 19: loss_det_center=330.3143, loss_det_obj=2.4978, loss_detection=332.8121, loss_objective=665.6241 | Pos samples: 2
+No valid query points in detection3d_000011
+No valid query points in detection3d_000020
+2025-08-30 16:47:05,922 - Step 20: loss_det_center=288.5217, loss_det_obj=2.4555, loss_detection=290.9772, loss_objective=581.9543 | Pos samples: 3
+No valid query points in detection3d_000029
+2025-08-30 16:47:07,425 - Step 21: loss_det_center=319.2390, loss_det_obj=2.4613, loss_detection=321.7004, loss_objective=643.4008 | Pos samples: 3
+No valid query points in detection3d_000026
+2025-08-30 16:47:11,861 - Step 22: loss_det_center=336.4407, loss_det_obj=2.4217, loss_detection=338.8624, loss_objective=677.7249 | Pos samples: 4
+No valid query points in detection3d_000037
+2025-08-30 16:47:13,517 - Step 23: loss_det_center=315.9961, loss_det_obj=2.5000, loss_detection=318.4961, loss_objective=636.9921 | Pos samples: 3
+No valid query points in detection3d_000017
+No valid query points in detection3d_000027
+2025-08-30 16:47:17,153 - Step 24: loss_det_center=265.2049, loss_det_obj=2.2574, loss_detection=267.4623, loss_objective=534.9246 | Pos samples: 3
+No valid query points in detection3d_000020
+No valid query points in detection3d_000034
+2025-08-30 16:47:20,843 - Step 25: loss_det_center=259.0197, loss_det_obj=2.2359, loss_detection=261.2556, loss_objective=522.5113 | Pos samples: 4
+No valid query points in detection3d_000028
+2025-08-30 16:47:22,934 - Step 26: loss_det_center=310.3981, loss_det_obj=2.4805, loss_detection=312.8786, loss_objective=625.7572 | Pos samples: 3
+No valid query points in detection3d_000024
+2025-08-30 16:47:26,189 - Step 27: loss_det_center=307.0262, loss_det_obj=2.5172, loss_detection=309.5435, loss_objective=619.0870 | Pos samples: 2
+No valid query points in detection3d_000006
+2025-08-30 16:47:29,712 - Step 28: loss_det_center=278.2046, loss_det_obj=2.4553, loss_detection=280.6599, loss_objective=561.3198 | Pos samples: 3
+No valid query points in detection3d_000032
+2025-08-30 16:47:32,721 - Step 29: loss_det_center=308.1267, loss_det_obj=2.4997, loss_detection=310.6264, loss_objective=621.2528 | Pos samples: 3
+No valid query points in detection3d_000011
+2025-08-30 16:47:35,718 - Step 30: loss_det_center=282.6969, loss_det_obj=2.4934, loss_detection=285.1904, loss_objective=570.3807 | Pos samples: 3
+No valid query points in detection3d_000037
+No valid query points in detection3d_000019
+2025-08-30 16:47:38,261 - Step 31: loss_det_center=303.2332, loss_det_obj=2.4704, loss_detection=305.7036, loss_objective=611.4072 | Pos samples: 4
+2025-08-30 16:47:38,262 - Train Metrics:
+2025-08-30 16:47:38,262 -
+Epoch 2/10
+Building dynamic dataloader with epoch: 1
 No valid query points in detection3d_000007
-2025-08-30 16:24:19,971 - Step 78: loss_det_center=277.7191, loss_det_obj=1.2909, loss_detection=279.0099, loss_objective=558.0199 | Pos samples: 0
-No valid query points in detection3d_000342
-No valid query points in detection3d_000216
-2025-08-30 16:24:28,434 - Step 79: loss_det_center=90.0722, loss_det_obj=0.9903, loss_unmatched_gt=0.0000, loss_detection=91.0625, loss_objective=182.1249 | Pos samples: 0
-No valid query points in detection3d_000224
-2025-08-30 16:24:32,868 - Step 80: loss_det_center=111.1680, loss_det_obj=0.7339, loss_unmatched_gt=0.0000, loss_detection=111.9019, loss_objective=223.8037 | Pos samples: 0
-No valid query points in detection3d_000346
-2025-08-30 16:24:38,324 - Step 81: loss_det_center=65.7812, loss_det_obj=1.2400, loss_unmatched_gt=0.0000, loss_detection=67.0212, loss_objective=134.0424 | Pos samples: 0
-No valid query points in detection3d_000010
-No valid query points in detection3d_000410
-2025-08-30 16:24:48,320 - Step 82: loss_det_center=235.8559, loss_det_obj=1.7620, loss_unmatched_gt=0.0000, loss_detection=237.6180, loss_objective=475.2360 | Pos samples: 0
-No valid query points in detection3d_000170
+2025-08-30 16:47:42,374 - Step 32: loss_det_center=286.3129, loss_det_obj=2.7224, loss_detection=289.0354, loss_objective=578.0707 | Pos samples: 4
+No valid query points in detection3d_000004
+2025-08-30 16:47:44,854 - Step 33: loss_det_center=283.3936, loss_det_obj=2.7721, loss_detection=286.1657, loss_objective=572.3315 | Pos samples: 3
 No valid query points in detection3d_000013
-2025-08-30 16:24:54,302 - Step 83: loss_det_center=195.2039, loss_det_obj=1.2406, loss_unmatched_gt=0.0000, loss_detection=196.4445, loss_objective=392.8891 | Pos samples: 0
-No valid query points in detection3d_000354
-2025-08-30 16:25:01,849 - Step 84: loss_det_center=71.6430, loss_det_obj=1.5639, loss_unmatched_gt=0.0000, loss_detection=73.2068, loss_objective=146.4137 | Pos samples: 0
-No valid query points in detection3d_000160
-2025-08-30 16:25:09,109 - Step 85: loss_det_center=102.1272, loss_det_obj=1.3151, loss_unmatched_gt=0.0000, loss_detection=103.4423, loss_objective=206.8846 | Pos samples: 0
-No valid query points in detection3d_000208
-2025-08-30 16:25:19,121 - Step 86: loss_det_center=102.5521, loss_det_obj=1.2086, loss_unmatched_gt=0.0000, loss_detection=103.7608, loss_objective=207.5215 | Pos samples: 0
-No valid query points in detection3d_000178
-2025-08-30 16:25:30,276 - Step 87: loss_det_center=100.3100, loss_det_obj=0.9878, loss_unmatched_gt=0.0000, loss_detection=101.2978, loss_objective=202.5956 | Pos samples: 0
-No valid query points in detection3d_000166
-No valid query points in detection3d_000206
+2025-08-30 16:47:49,885 - Step 34: loss_det_center=288.2422, loss_det_obj=2.7280, loss_detection=290.9703, loss_objective=581.9406 | Pos samples: 4
+No valid query points in detection3d_000038
+2025-08-30 16:47:53,237 - Step 35: loss_det_center=276.6892, loss_det_obj=2.6550, loss_detection=279.3442, loss_objective=558.6885 | Pos samples: 0
+No valid query points in detection3d_000031
+2025-08-30 16:47:57,852 - Step 36: loss_det_center=270.2471, loss_det_obj=2.7288, loss_detection=272.9758, loss_objective=545.9517 | Pos samples: 0
+No valid query points in detection3d_000029
+2025-08-30 16:48:00,513 - Step 37: loss_det_center=264.7846, loss_det_obj=2.7618, loss_detection=267.5464, loss_objective=535.0928 | Pos samples: 0
+No valid query points in detection3d_000039
+No valid query points in detection3d_000037
+2025-08-30 16:48:06,211 - Step 38: loss_det_center=278.4245, loss_det_obj=2.7867, loss_detection=281.2112, loss_objective=562.4224 | Pos samples: 0
+No valid query points in detection3d_000023
+2025-08-30 16:48:12,074 - Step 39: loss_det_center=275.2528, loss_det_obj=2.8097, loss_detection=278.0626, loss_objective=556.1251 | Pos samples: 0
+No valid query points in detection3d_000033
+2025-08-30 16:48:17,609 - Step 40: loss_det_center=278.1867, loss_det_obj=2.8245, loss_detection=281.0111, loss_objective=562.0222 | Pos samples: 0
+No valid query points in detection3d_000019
+No valid query points in detection3d_000026
+2025-08-30 16:48:23,632 - Step 41: loss_det_center=243.5444, loss_det_obj=2.8210, loss_detection=246.3654, loss_objective=492.7308 | Pos samples: 0
+No valid query points in detection3d_000033
+2025-08-30 16:48:27,946 - Step 42: loss_det_center=279.6081, loss_det_obj=2.8760, loss_detection=282.4841, loss_objective=564.9681 | Pos samples: 0
+No valid query points in detection3d_000017
+2025-08-30 16:48:34,729 - Step 43: loss_det_center=211.0693, loss_det_obj=2.8301, loss_unmatched_gt=0.0000, loss_detection=213.8995, loss_objective=427.7989 | Pos samples: 0
+No valid query points in detection3d_000006
+No valid query points in detection3d_000009
+2025-08-30 16:48:40,437 - Step 44: loss_det_center=220.9930, loss_det_obj=3.0152, loss_detection=224.0082, loss_objective=448.0164 | Pos samples: 0
+No valid query points in detection3d_000003
+2025-08-30 16:48:44,207 - Step 45: loss_det_center=214.6351, loss_det_obj=3.0845, loss_unmatched_gt=0.0021, loss_detection=217.7217, loss_objective=435.4435 | Pos samples: 0
+No valid query points in detection3d_000030
+2025-08-30 16:48:53,490 - Step 46: loss_det_center=162.3946, loss_det_obj=2.8332, loss_detection=165.2279, loss_objective=330.4557 | Pos samples: 0
+[DEBUG Composed] Received from base_dataset:
+  gt_boxes type: <class 'numpy.ndarray'>
+  gt_boxes shape: (26, 7)
+No valid query points in detection3d_000000
+2025-08-30 16:49:00,964 - Step 47: loss_det_center=176.5507, loss_det_obj=2.9026, loss_detection=179.4532, loss_objective=358.9064 | Pos samples: 0
+No valid query points in detection3d_000006
+2025-08-30 16:49:07,036 - Step 48: loss_det_center=226.5760, loss_det_obj=2.2527, loss_unmatched_gt=0.0001, loss_detection=228.8288, loss_objective=457.6576 | Pos samples: 0
+No valid query points in detection3d_000020
+2025-08-30 16:49:17,208 - Step 49: loss_det_center=210.0941, loss_det_obj=1.8888, loss_unmatched_gt=0.0000, loss_detection=211.9830, loss_objective=423.9660 | Pos samples: 0
+No valid query points in detection3d_000010
+2025-08-30 16:49:25,861 - Step 50: loss_det_center=181.4827, loss_det_obj=1.9928, loss_unmatched_gt=0.0000, loss_detection=183.4755, loss_objective=366.9510 | Pos samples: 0
+No valid query points in detection3d_000015
+No valid query points in detection3d_000027
+2025-08-30 16:49:31,117 - Step 51: loss_det_center=213.0074, loss_det_obj=1.8498, loss_unmatched_gt=1.6087, loss_detection=216.4660, loss_objective=432.9320 | Pos samples: 0
+No valid query points in detection3d_000031
+2025-08-30 16:49:40,491 - Step 52: loss_det_center=221.9049, loss_det_obj=1.8888, loss_unmatched_gt=0.0002, loss_detection=223.7939, loss_objective=447.5878 | Pos samples: 0
+No valid query points in detection3d_000036
+2025-08-30 16:49:47,375 - Step 53: loss_det_center=257.4371, loss_det_obj=2.0958, loss_unmatched_gt=0.0000, loss_detection=259.5330, loss_objective=519.0660 | Pos samples: 0
+No valid query points in detection3d_000028
+2025-08-30 16:49:52,263 - Step 54: loss_det_center=218.2160, loss_det_obj=1.8368, loss_unmatched_gt=1.3617, loss_detection=221.4145, loss_objective=442.8290 | Pos samples: 0
+No valid query points in detection3d_000019
+No valid query points in detection3d_000019
+2025-08-30 16:49:57,282 - Step 55: loss_det_center=209.1785, loss_det_obj=1.8888, loss_unmatched_gt=0.0003, loss_detection=211.0676, loss_objective=422.1353 | Pos samples: 0
+No valid query points in detection3d_000003
+No valid query points in detection3d_000030
+2025-08-30 16:50:02,216 - Step 56: loss_det_center=207.4326, loss_det_obj=1.8906, loss_unmatched_gt=0.0008, loss_detection=209.3239, loss_objective=418.6478 | Pos samples: 0
+No valid query points in detection3d_000011
+2025-08-30 16:50:07,684 - Step 57: loss_det_center=201.3380, loss_det_obj=1.8498, loss_unmatched_gt=0.4921, loss_detection=203.6800, loss_objective=407.3600 | Pos samples: 0
+No valid query points in detection3d_000010
+2025-08-30 16:50:15,214 - Step 58: loss_det_center=200.3547, loss_det_obj=1.8888, loss_unmatched_gt=0.0016, loss_detection=202.2451, loss_objective=404.4901 | Pos samples: 0
+No valid query points in detection3d_000024
+No valid query points in detection3d_000003
+2025-08-30 16:50:24,203 - Step 59: loss_det_center=245.6715, loss_det_obj=1.9346, loss_unmatched_gt=0.0150, loss_detection=247.6211, loss_objective=495.2422 | Pos samples: 3
+No valid query points in detection3d_000016
+2025-08-30 16:50:30,746 - Step 60: loss_det_center=206.2245, loss_det_obj=1.8888, loss_unmatched_gt=0.0093, loss_detection=208.1227, loss_objective=416.2453 | Pos samples: 0
+No valid query points in detection3d_000024
+2025-08-30 16:50:36,250 - Step 61: loss_det_center=213.9948, loss_det_obj=1.8368, loss_unmatched_gt=2.3406, loss_detection=218.1722, loss_objective=436.3444 | Pos samples: 0
+No valid query points in detection3d_000038
+2025-08-30 16:50:40,945 - Step 62: loss_det_center=231.0359, loss_det_obj=1.8888, loss_unmatched_gt=0.0048, loss_detection=232.9295, loss_objective=465.8591 | Pos samples: 0
+No valid query points in detection3d_000004
+2025-08-30 16:50:46,914 - Step 63: loss_det_center=194.3165, loss_det_obj=1.8368, loss_unmatched_gt=0.3914, loss_detection=196.5447, loss_objective=393.0895 | Pos samples: 0
+No valid query points in detection3d_000022
+2025-08-30 16:50:52,328 - Step 64: loss_det_center=212.1762, loss_det_obj=1.8108, loss_unmatched_gt=6.2448, loss_detection=220.2319, loss_objective=440.4637 | Pos samples: 0
+2025-08-30 16:50:52,328 - Train Metrics:
+2025-08-30 16:50:52,329 -
+Epoch 3/10
+Building dynamic dataloader with epoch: 2
+No valid query points in detection3d_000023
+2025-08-30 16:50:58,521 - Step 65: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=9.0508, loss_detection=10.7837, loss_objective=21.5674 | Pos samples: 0
+No valid query points in detection3d_000007
+2025-08-30 16:51:03,850 - Step 66: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.0365, loss_detection=2.7694, loss_objective=5.5388 | Pos samples: 0
+No valid query points in detection3d_000023
+No valid query points in detection3d_000015
+2025-08-30 16:51:13,842 - Step 67: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=7.4806, loss_detection=9.2135, loss_objective=18.4270 | Pos samples: 0
+No valid query points in detection3d_000015
+No valid query points in detection3d_000021
+2025-08-30 16:51:24,638 - Step 68: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=11.2414, loss_detection=12.9743, loss_objective=25.9486 | Pos samples: 0
+No valid query points in detection3d_000026
+No valid query points in detection3d_000022
+2025-08-30 16:51:30,008 - Step 69: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=8.1181, loss_detection=9.8509, loss_objective=19.7019 | Pos samples: 0
+No valid query points in detection3d_000020
+2025-08-30 16:51:38,397 - Step 70: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=20.7094, loss_detection=22.4423, loss_objective=44.8845 | Pos samples: 0
+No valid query points in detection3d_000023
+[DEBUG Composed] Received from base_dataset:
+  gt_boxes type: <class 'numpy.ndarray'>
+  gt_boxes shape: (27, 7)
+No valid query points in detection3d_000010
+2025-08-30 16:51:50,396 - Step 71: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=5.3326, loss_detection=7.0655, loss_objective=14.1309 | Pos samples: 0
+No valid query points in detection3d_000000
+No valid query points in detection3d_000000
+2025-08-30 16:52:02,553 - Step 72: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=3.4874, loss_detection=5.2203, loss_objective=10.4405 | Pos samples: 0
+No valid query points in detection3d_000013
+2025-08-30 16:52:08,576 - Step 73: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=3.4828, loss_detection=5.2156, loss_objective=10.4312 | Pos samples: 0
+No valid query points in detection3d_000022
+2025-08-30 16:52:13,714 - Step 74: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=12.4620, loss_detection=14.1948, loss_objective=28.3897 | Pos samples: 0
+No valid query points in detection3d_000012
+No valid query points in detection3d_000011
+2025-08-30 16:52:25,038 - Step 75: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=2.2916, loss_detection=4.0244, loss_objective=8.0488 | Pos samples: 0
+No valid query points in detection3d_000002
+2025-08-30 16:52:30,976 - Step 76: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.9275, loss_detection=3.6604, loss_objective=7.3207 | Pos samples: 0
+No valid query points in detection3d_000027
+No valid query points in detection3d_000038
+2025-08-30 16:52:39,568 - Step 77: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=3.1558, loss_detection=4.8887, loss_objective=9.7774 | Pos samples: 0
+No valid query points in detection3d_000006
+No valid query points in detection3d_000036
+2025-08-30 16:52:44,677 - Step 78: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.6147, loss_detection=3.3476, loss_objective=6.6952 | Pos samples: 0
+No valid query points in detection3d_000020
+2025-08-30 16:52:51,572 - Step 79: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=20.7094, loss_detection=22.4423, loss_objective=44.8845 | Pos samples: 0
+No valid query points in detection3d_000006
+2025-08-30 16:53:03,745 - Step 80: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=0.9847, loss_detection=2.7176, loss_objective=5.4351 | Pos samples: 0
+No valid query points in detection3d_000017
+2025-08-30 16:53:08,528 - Step 81: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=10.3129, loss_detection=12.0457, loss_objective=24.0915 | Pos samples: 0
+No valid query points in detection3d_000029
+2025-08-30 16:53:19,197 - Step 82: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.8919, loss_detection=3.6248, loss_objective=7.2495 | Pos samples: 0
+No valid query points in detection3d_000008
+2025-08-30 16:53:25,695 - Step 83: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.1526, loss_detection=2.8854, loss_objective=5.7709 | Pos samples: 0
+No valid query points in detection3d_000030
+2025-08-30 16:53:33,109 - Step 84: loss_det_center=0.0000, loss_det_obj=1.7484, loss_unmatched_gt=1.5592, loss_detection=3.3076, loss_objective=6.6152 | Pos samples: 3
+No valid query points in detection3d_000025
+2025-08-30 16:53:44,991 - Step 85: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=5.1466, loss_detection=6.8795, loss_objective=13.7589 | Pos samples: 0
+No valid query points in detection3d_000031
+2025-08-30 16:53:51,078 - Step 86: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.4816, loss_detection=3.2145, loss_objective=6.4290 | Pos samples: 0
+No valid query points in detection3d_000012
+2025-08-30 16:53:57,853 - Step 87: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=2.6187, loss_detection=4.3516, loss_objective=8.7032 | Pos samples: 0
+No valid query points in detection3d_000004
+2025-08-30 16:54:05,188 - Step 88: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.1676, loss_detection=2.9005, loss_objective=5.8010 | Pos samples: 0
+No valid query points in detection3d_000026
+No valid query points in detection3d_000016
+2025-08-30 16:54:12,795 - Step 89: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=5.7013, loss_detection=7.4342, loss_objective=14.8684 | Pos samples: 0
+No valid query points in detection3d_000021
+No valid query points in detection3d_000027
+2025-08-30 16:54:21,737 - Step 90: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=9.7716, loss_detection=11.5045, loss_objective=23.0089 | Pos samples: 0
+No valid query points in detection3d_000036
+No valid query points in detection3d_000036
+2025-08-30 16:54:31,810 - Step 91: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=2.2448, loss_detection=3.9776, loss_objective=7.9553 | Pos samples: 0
+No valid query points in detection3d_000006
+No valid query points in detection3d_000007
+2025-08-30 16:54:39,386 - Step 92: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.0106, loss_detection=2.7435, loss_objective=5.4870 | Pos samples: 0
+2025-08-30 16:54:39,387 - Train Metrics:
+2025-08-30 16:54:39,387 -
+Epoch 4/10
+Building dynamic dataloader with epoch: 3
+No valid query points in detection3d_000026
+No valid query points in detection3d_000039
+2025-08-30 16:54:43,735 - Step 93: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=3.8677, loss_detection=5.6006, loss_objective=11.2012 | Pos samples: 0
+No valid query points in detection3d_000028
+[DEBUG Composed] Received from base_dataset:
+  gt_boxes type: <class 'numpy.ndarray'>
+  gt_boxes shape: (26, 7)
+No valid query points in detection3d_000000
+2025-08-30 16:54:54,563 - Step 94: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=2.9374, loss_detection=4.6703, loss_objective=9.3405 | Pos samples: 0
+No valid query points in detection3d_000020
+No valid query points in detection3d_000019
+2025-08-30 16:55:02,905 - Step 95: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=19.9314, loss_detection=21.6643, loss_objective=43.3286 | Pos samples: 0
+No valid query points in detection3d_000035
+2025-08-30 16:55:09,316 - Step 96: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.9847, loss_detection=3.7175, loss_objective=7.4351 | Pos samples: 0
+No valid query points in detection3d_000025
+2025-08-30 16:55:13,759 - Step 97: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=5.1466, loss_detection=6.8795, loss_objective=13.7589 | Pos samples: 0
+No valid query points in detection3d_000037
+2025-08-30 16:55:19,013 - Step 98: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=2.7275, loss_detection=4.4604, loss_objective=8.9208 | Pos samples: 0
+No valid query points in detection3d_000035
+No valid query points in detection3d_000012
+2025-08-30 16:55:24,664 - Step 99: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=2.3017, loss_detection=4.0346, loss_objective=8.0691 | Pos samples: 0
+No valid query points in detection3d_000002
+2025-08-30 16:55:34,487 - Step 100: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.9275, loss_detection=3.6604, loss_objective=7.3207 | Pos samples: 0
+No valid query points in detection3d_000018
+2025-08-30 16:55:43,561 - Step 101: loss_det_center=0.0000, loss_det_obj=1.7484, loss_unmatched_gt=13.6421, loss_detection=15.3904, loss_objective=30.7809 | Pos samples: 4
+No valid query points in detection3d_000030
+2025-08-30 16:55:49,668 - Step 102: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.6313, loss_detection=3.3642, loss_objective=6.7284 | Pos samples: 0
+No valid query points in detection3d_000005
+No valid query points in detection3d_000031
+2025-08-30 16:55:58,938 - Step 103: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.2534, loss_detection=2.9862, loss_objective=5.9725 | Pos samples: 0
+No valid query points in detection3d_000032
+No valid query points in detection3d_000024
+2025-08-30 16:56:04,502 - Step 104: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=4.2342, loss_detection=5.9670, loss_objective=11.9341 | Pos samples: 0
+No valid query points in detection3d_000003
+No valid query points in detection3d_000012
+2025-08-30 16:56:10,091 - Step 105: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=2.0265, loss_detection=3.7594, loss_objective=7.5188 | Pos samples: 0
+No valid query points in detection3d_000008
+No valid query points in detection3d_000021
+2025-08-30 16:56:15,569 - Step 106: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=8.8625, loss_detection=10.5954, loss_objective=21.1907 | Pos samples: 0
+No valid query points in detection3d_000014
+No valid query points in detection3d_000016
+2025-08-30 16:56:22,578 - Step 107: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=5.9833, loss_detection=7.7162, loss_objective=15.4324 | Pos samples: 0
+No valid query points in detection3d_000038
+No valid query points in detection3d_000038
+2025-08-30 16:56:29,482 - Step 108: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=3.3409, loss_detection=5.0737, loss_objective=10.1474 | Pos samples: 0
+No valid query points in detection3d_000011
+2025-08-30 16:56:34,643 - Step 109: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.9644, loss_detection=3.6973, loss_objective=7.3945 | Pos samples: 0
+No valid query points in detection3d_000008
+2025-08-30 16:56:39,865 - Step 110: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.1526, loss_detection=2.8854, loss_objective=5.7709 | Pos samples: 0
+No valid query points in detection3d_000031
+2025-08-30 16:56:43,564 - Step 111: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.4816, loss_detection=3.2145, loss_objective=6.4290 | Pos samples: 0
+No valid query points in detection3d_000033
+2025-08-30 16:56:51,611 - Step 112: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.5290, loss_detection=3.2619, loss_objective=6.5237 | Pos samples: 0
+No valid query points in detection3d_000033
+No valid query points in detection3d_000010
+2025-08-30 16:56:58,343 - Step 113: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.5717, loss_detection=3.3045, loss_objective=6.6091 | Pos samples: 0
+No valid query points in detection3d_000017
+2025-08-30 16:57:05,994 - Step 114: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=10.3129, loss_detection=12.0457, loss_objective=24.0915 | Pos samples: 0
+No valid query points in detection3d_000023
+2025-08-30 16:57:11,975 - Step 115: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=9.0508, loss_detection=10.7837, loss_objective=21.5674 | Pos samples: 0
+No valid query points in detection3d_000016
+2025-08-30 16:57:23,327 - Step 116: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=7.6285, loss_detection=9.3613, loss_objective=18.7227 | Pos samples: 0
+No valid query points in detection3d_000026
+2025-08-30 16:57:27,962 - Step 117: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=3.7741, loss_detection=5.5070, loss_objective=11.0140 | Pos samples: 0
+No valid query points in detection3d_000017
+No valid query points in detection3d_000020
+2025-08-30 16:57:36,785 - Step 118: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=15.5111, loss_detection=17.2440, loss_objective=34.4880 | Pos samples: 0
+No valid query points in detection3d_000033
+No valid query points in detection3d_000002
+2025-08-30 16:57:44,584 - Step 119: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.7282, loss_detection=3.4611, loss_objective=6.9222 | Pos samples: 0
+2025-08-30 16:57:44,585 - Train Metrics:
+2025-08-30 16:57:44,585 -
+Epoch 5/10
+Building dynamic dataloader with epoch: 4
+No valid query points in detection3d_000021
+2025-08-30 16:57:50,895 - Step 120: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=16.5724, loss_detection=18.3053, loss_objective=36.6106 | Pos samples: 0
+No valid query points in detection3d_000000
+2025-08-30 16:57:57,296 - Step 121: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=3.4874, loss_detection=5.2203, loss_objective=10.4405 | Pos samples: 0
+No valid query points in detection3d_000011
+2025-08-30 16:58:09,763 - Step 122: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.9644, loss_detection=3.6973, loss_objective=7.3945 | Pos samples: 0
+No valid query points in detection3d_000008
+No valid query points in detection3d_000000
+2025-08-30 16:58:20,768 - Step 123: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=2.3200, loss_detection=4.0528, loss_objective=8.1057 | Pos samples: 0
+No valid query points in detection3d_000007
+No valid query points in detection3d_000013
+2025-08-30 16:58:31,728 - Step 124: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=2.2596, loss_detection=3.9925, loss_objective=7.9850 | Pos samples: 0
+No valid query points in detection3d_000001
+No valid query points in detection3d_000021
+2025-08-30 16:58:37,008 - Step 125: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=9.5485, loss_detection=11.2814, loss_objective=22.5628 | Pos samples: 0
+No valid query points in detection3d_000039
+No valid query points in detection3d_000026
+2025-08-30 16:58:45,699 - Step 126: loss_det_center=0.0000, loss_det_obj=1.7406, loss_unmatched_gt=3.8566, loss_detection=5.5972, loss_objective=11.1944 | Pos samples: 2
+No valid query points in detection3d_000029
+No valid query points in detection3d_000006
+2025-08-30 16:58:51,977 - Step 127: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.4383, loss_detection=3.1712, loss_objective=6.3423 | Pos samples: 0
+No valid query points in detection3d_000025
+2025-08-30 16:59:00,565 - Step 128: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=5.1466, loss_detection=6.8795, loss_objective=13.7589 | Pos samples: 0
+No valid query points in detection3d_000006
+No valid query points in detection3d_000019
+2025-08-30 16:59:10,295 - Step 129: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=10.0691, loss_detection=11.8020, loss_objective=23.6039 | Pos samples: 0
+No valid query points in detection3d_000026
+2025-08-30 16:59:16,405 - Step 130: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=3.7741, loss_detection=5.5070, loss_objective=11.0140 | Pos samples: 0
+No valid query points in detection3d_000038
+2025-08-30 16:59:23,466 - Step 131: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=3.3409, loss_detection=5.0737, loss_objective=10.1474 | Pos samples: 0
+No valid query points in detection3d_000021
+No valid query points in detection3d_000004
+2025-08-30 16:59:31,964 - Step 132: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=8.8700, loss_detection=10.6029, loss_objective=21.2058 | Pos samples: 0
+No valid query points in detection3d_000017
+No valid query points in detection3d_000036
+2025-08-30 16:59:38,076 - Step 133: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=6.2788, loss_detection=8.0117, loss_objective=16.0234 | Pos samples: 0
+No valid query points in detection3d_000014
+2025-08-30 16:59:43,835 - Step 134: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=4.3382, loss_detection=6.0711, loss_objective=12.1421 | Pos samples: 0
+No valid query points in detection3d_000019
+No valid query points in detection3d_000030
+2025-08-30 16:59:52,332 - Step 135: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=10.3924, loss_detection=12.1253, loss_objective=24.2506 | Pos samples: 0
+[DEBUG Composed] Received from base_dataset:
+  gt_boxes type: <class 'numpy.ndarray'>
+  gt_boxes shape: (28, 7)
+No valid query points in detection3d_000028
+No valid query points in detection3d_000035
+2025-08-30 17:00:02,577 - Step 136: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=2.1860, loss_detection=3.9189, loss_objective=7.8378 | Pos samples: 0
+No valid query points in detection3d_000013
+No valid query points in detection3d_000026
+2025-08-30 17:00:09,751 - Step 137: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=3.6284, loss_detection=5.3613, loss_objective=10.7226 | Pos samples: 0
+No valid query points in detection3d_000002
+No valid query points in detection3d_000010
+2025-08-30 17:00:17,774 - Step 138: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.7709, loss_detection=3.5038, loss_objective=7.0076 | Pos samples: 0
+No valid query points in detection3d_000018
+No valid query points in detection3d_000006
+2025-08-30 17:00:22,885 - Step 139: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=7.3147, loss_detection=9.0476, loss_objective=18.0952 | Pos samples: 0
+No valid query points in detection3d_000000
+No valid query points in detection3d_000034
+2025-08-30 17:00:30,962 - Step 140: loss_det_center=0.0000, loss_det_obj=1.7445, loss_unmatched_gt=2.5250, loss_detection=4.2695, loss_objective=8.5390 | Pos samples: 3
+No valid query points in detection3d_000038
+2025-08-30 17:00:34,925 - Step 141: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=3.3409, loss_detection=5.0737, loss_objective=10.1474 | Pos samples: 0
+No valid query points in detection3d_000009
+No valid query points in detection3d_000032
+2025-08-30 17:00:42,597 - Step 142: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.3842, loss_detection=3.1171, loss_objective=6.2341 | Pos samples: 0
+No valid query points in detection3d_000038
+2025-08-30 17:00:47,760 - Step 143: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=3.3409, loss_detection=5.0737, loss_objective=10.1474 | Pos samples: 0
+No valid query points in detection3d_000011
+2025-08-30 17:00:55,773 - Step 144: loss_det_center=0.0000, loss_det_obj=1.7329, loss_unmatched_gt=1.9644, loss_detection=3.6973, loss_objective=7.3945 | Pos samples: 0
+2025-08-30 17:00:55,775 - Train Metrics:
+Building dynamic dataloader with epoch: 4
+[DEBUG Composed] Received from base_dataset:
+  gt_boxes type: <class 'numpy.ndarray'>
+  gt_boxes shape: (26, 7)
+/home/admin123/vggt_ours1/training/trainer.py:145: FutureWarning:
+
+`torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+
+2025-08-30 17:01:00,787 - Val Metrics:
+2025-08-30 17:01:11,598 - Saved checkpoint: logs/detection_3d/ckpts/epoch_0004.pth
+2025-08-30 17:01:11,599 -
+Epoch 6/10
+Building dynamic dataloader with epoch: 5
+No valid query points in detection3d_000001
+2025-08-30 17:01:21,064 - Step 145: loss_det_center=0.0000, loss_det_obj=1.7484, loss_det_size=0.0000, loss_det_angle=0.0000, loss_det_cls=1730605.6250, loss_unmatched_gt=2.5065, loss_detection=1730609.8750, loss_objective=3461219.7500 | Pos samples: 4
+No valid query points in detection3d_000017
+No valid query points in detection3d_000022
+2025-08-30 17:01:27,709 - Step 146: loss_det_center=0.0000, loss_det_obj=1.7485, loss_det_size=0.0000, loss_det_angle=0.0000, loss_det_cls=1151778.2500, loss_unmatched_gt=11.3830, loss_detection=1151791.3750, loss_objective=2303582.7500 | Pos samples: 4
+No valid query points in detection3d_000032
+2025-08-30 17:01:34,969 - Step 147: loss_det_center=0.0000, loss_det_obj=1.7556, loss_det_size=0.0000, loss_det_angle=0.0000, loss_det_cls=389441.1875, loss_unmatched_gt=1.3267, loss_detection=389444.2500, loss_objective=778888.5000 | Pos samples: 6
+No valid query points in detection3d_000019
+No valid query points in detection3d_000010
+2025-08-30 17:01:44,108 - Step 148: loss_det_center=0.0000, loss_det_obj=1.8164, loss_det_size=0.0000, loss_det_angle=0.0000, loss_det_cls=220789.8750, loss_unmatched_gt=8.4625, loss_detection=220800.1562, loss_objective=441600.3125 | Pos samples: 12
+No valid query points in detection3d_000019
+No valid query points in detection3d_000021
+2025-08-30 17:01:49,853 - Step 149: loss_det_center=72.7988, loss_det_obj=3.4464, loss_det_size=54.1294, loss_det_angle=0.6288, loss_det_cls=13386.6699, loss_unmatched_gt=4.3467, loss_detection=13522.0205, loss_objective=27044.0391 | Pos samples: 280
+No valid query points in detection3d_000030
+No valid query points in detection3d_000038
+2025-08-30 17:01:59,719 - Step 150: loss_det_center=148.5906, loss_det_obj=3.3667, loss_det_size=52.7502, loss_det_angle=0.1010, loss_det_cls=1700.9116, loss_unmatched_gt=0.4217, loss_detection=1906.1418, loss_objective=3812.2837 | Pos samples: 280
+No valid query points in detection3d_000025
+No valid query points in detection3d_000014
+2025-08-30 17:02:08,546 - Step 151: loss_det_center=214.6040, loss_det_obj=3.2509, loss_det_size=36.0922, loss_det_angle=0.3099, loss_det_cls=285.1199, loss_unmatched_gt=0.0010, loss_detection=539.3779, loss_objective=1078.7559 | Pos samples: 280
+No valid query points in detection3d_000017
+2025-08-30 17:02:14,371 - Step 152: loss_det_center=217.4920, loss_det_obj=3.0354, loss_det_size=21.2974, loss_det_angle=0.2053, loss_det_cls=46.3940, loss_unmatched_gt=0.0003, loss_detection=288.4244, loss_objective=576.8488 | Pos samples: 210
+No valid query points in detection3d_000035
+No valid query points in detection3d_000013
+2025-08-30 17:02:20,379 - Step 153: loss_det_center=228.5173, loss_det_obj=2.9846, loss_det_size=18.8403, loss_det_angle=0.0963, loss_det_cls=12.7384, loss_unmatched_gt=0.0002, loss_detection=263.1771, loss_objective=526.3541 | Pos samples: 281
+No valid query points in detection3d_000037
+No valid query points in detection3d_000015
+2025-08-30 17:02:30,921 - Step 154: loss_det_center=193.4596, loss_det_obj=2.7304, loss_det_size=17.1340, loss_det_angle=0.0946, loss_det_cls=11.1915, loss_unmatched_gt=0.0001, loss_detection=224.6103, loss_objective=449.2206 | Pos samples: 321
+No valid query points in detection3d_000034
+No valid query points in detection3d_000024
+2025-08-30 17:02:38,261 - Step 155: loss_det_center=246.2595, loss_det_obj=2.8697, loss_det_size=10.6318, loss_det_angle=0.1169, loss_det_cls=14.3133, loss_unmatched_gt=0.0001, loss_detection=274.1912, loss_objective=548.3824 | Pos samples: 383
+No valid query points in detection3d_000004
+2025-08-30 17:02:46,323 - Step 156: loss_det_center=227.2016, loss_det_obj=2.9529, loss_det_size=9.2625, loss_det_angle=0.1563, loss_det_cls=14.8112, loss_unmatched_gt=0.0002, loss_detection=254.3848, loss_objective=508.7696 | Pos samples: 383
+No valid query points in detection3d_000000
+2025-08-30 17:02:52,114 - Step 157: loss_det_center=208.7450, loss_det_obj=2.9505, loss_det_size=8.6631, loss_det_angle=0.0758, loss_det_cls=11.2111, loss_unmatched_gt=0.0002, loss_detection=231.6455, loss_objective=463.2911 | Pos samples: 385
+No valid query points in detection3d_000037
+2025-08-30 17:03:02,966 - Step 158: loss_det_center=208.2825, loss_det_obj=3.2253, loss_det_size=7.4469, loss_det_angle=0.1780, loss_det_cls=8.7461, loss_unmatched_gt=0.0000, loss_detection=227.8790, loss_objective=455.7580 | Pos samples: 394
+No valid query points in detection3d_000030
+No valid query points in detection3d_000012
+2025-08-30 17:03:12,324 - Step 159: loss_det_center=233.3703, loss_det_obj=3.2739, loss_det_size=9.5988, loss_det_angle=0.1119, loss_det_cls=6.0096, loss_unmatched_gt=0.0000, loss_detection=252.3646, loss_objective=504.7291 | Pos samples: 400
+No valid query points in detection3d_000015
+2025-08-30 17:03:21,997 - Step 160: loss_det_center=267.5249, loss_det_obj=3.2949, loss_det_size=13.2448, loss_det_angle=0.1015, loss_det_cls=2.5793, loss_unmatched_gt=0.0000, loss_detection=286.7454, loss_objective=573.4907 | Pos samples: 400
+[DEBUG Composed] Received from base_dataset:
+  gt_boxes type: <class 'numpy.ndarray'>
+  gt_boxes shape: (27, 7)
+No valid query points in detection3d_000035
+No valid query points in detection3d_000013
+2025-08-30 17:03:28,166 - Step 161: loss_det_center=239.1280, loss_det_obj=3.2884, loss_det_size=8.7978, loss_det_angle=0.0690, loss_det_cls=2.4572, loss_unmatched_gt=0.0000, loss_detection=253.7403, loss_objective=507.4807 | Pos samples: 400
+No valid query points in detection3d_000008
+No valid query points in detection3d_000018
+2025-08-30 17:03:38,564 - Step 162: loss_det_center=248.2692, loss_det_obj=3.3293, loss_det_size=14.2062, loss_det_angle=0.0762, loss_det_cls=2.1104, loss_unmatched_gt=0.0000, loss_detection=267.9912, loss_objective=535.9825 | Pos samples: 400
+No valid query points in detection3d_000017
+2025-08-30 17:03:43,549 - Step 163: loss_det_center=196.6202, loss_det_obj=3.0708, loss_det_size=17.8472, loss_det_angle=0.0701, loss_det_cls=1.7082, loss_unmatched_gt=0.0000, loss_detection=219.3166, loss_objective=438.6331 | Pos samples: 300
+No valid query points in detection3d_000025
+2025-08-30 17:03:53,879 - Step 164: loss_det_center=243.1778, loss_det_obj=3.1782, loss_det_size=17.3398, loss_det_angle=0.1205, loss_det_cls=1.9342, loss_unmatched_gt=0.0000, loss_detection=265.7505, loss_objective=531.5011 | Pos samples: 400
+No valid query points in detection3d_000005
+No valid query points in detection3d_000037
+2025-08-30 17:04:01,943 - Step 165: loss_det_center=220.7410, loss_det_obj=3.0338, loss_det_size=11.6098, loss_det_angle=0.0837, loss_det_cls=1.7315, loss_unmatched_gt=0.0000, loss_detection=237.1997, loss_objective=474.3995 | Pos samples: 400
+No valid query points in detection3d_000028
+No valid query points in detection3d_000016
+2025-08-30 17:04:13,812 - Step 166: loss_det_center=197.4745, loss_det_obj=2.8424, loss_det_size=9.8528, loss_det_angle=0.0675, loss_det_cls=2.1433, loss_unmatched_gt=0.0000, loss_detection=212.3805, loss_objective=424.7611 | Pos samples: 400
+No valid query points in detection3d_000000
+2025-08-30 17:04:21,761 - Step 167: loss_det_center=180.9096, loss_det_obj=2.9868, loss_det_size=10.6828, loss_det_angle=0.0459, loss_det_cls=3.0339, loss_unmatched_gt=0.0000, loss_detection=197.6590, loss_objective=395.3180 | Pos samples: 400
+No valid query points in detection3d_000028
+No valid query points in detection3d_000018
+2025-08-30 17:04:29,739 - Step 168: loss_det_center=178.6097, loss_det_obj=2.9239, loss_det_size=8.7278, loss_det_angle=0.0709, loss_det_cls=3.6111, loss_unmatched_gt=0.0000, loss_detection=193.9434, loss_objective=387.8867 | Pos samples: 400
+No valid query points in detection3d_000019
+2025-08-30 17:04:36,327 - Step 169: loss_det_center=167.9753, loss_det_obj=2.8690, loss_det_size=5.1266, loss_det_angle=0.0812, loss_det_cls=3.2488, loss_unmatched_gt=0.0000, loss_detection=179.3009, loss_objective=358.6018 | Pos samples: 400
+No valid query points in detection3d_000004
+2025-08-30 17:04:41,408 - Step 170: loss_det_center=172.5645, loss_det_obj=2.7318, loss_det_size=6.5684, loss_det_angle=0.0591, loss_det_cls=2.3064, loss_unmatched_gt=0.0000, loss_detection=184.2303, loss_objective=368.4605 | Pos samples: 200
+2025-08-30 17:04:41,409 - Train Metrics:
+2025-08-30 17:04:41,409 -
+Epoch 7/10
+Building dynamic dataloader with epoch: 6
+No valid query points in detection3d_000031
+No valid query points in detection3d_000001
+2025-08-30 17:04:46,306 - Step 171: loss_det_center=187.5743, loss_det_obj=2.7318, loss_det_size=14.1877, loss_det_angle=0.0487, loss_det_cls=2.1857, loss_unmatched_gt=0.0000, loss_detection=206.7283, loss_objective=413.4565 | Pos samples: 400
+No valid query points in detection3d_000031
+2025-08-30 17:04:53,694 - Step 172: loss_det_center=214.6970, loss_det_obj=2.9860, loss_det_size=15.0370, loss_det_angle=0.0838, loss_det_cls=2.2888, loss_unmatched_gt=0.0000, loss_detection=235.0926, loss_objective=470.1852 | Pos samples: 400
+No valid query points in detection3d_000038
+2025-08-30 17:04:57,938 - Step 173: loss_det_center=217.2713, loss_det_obj=2.7187, loss_det_size=10.7422, loss_det_angle=0.0566, loss_det_cls=1.8349, loss_unmatched_gt=0.0000, loss_detection=232.6238, loss_objective=465.2477 | Pos samples: 300
+No valid query points in detection3d_000001
+No valid query points in detection3d_000009
+2025-08-30 17:05:07,636 - Step 174: loss_det_center=169.9694, loss_det_obj=2.7940, loss_det_size=9.7523, loss_det_angle=0.0507, loss_det_cls=1.9763, loss_unmatched_gt=0.0000, loss_detection=184.5427, loss_objective=369.0853 | Pos samples: 400
+No valid query points in detection3d_000007
+No valid query points in detection3d_000039
+2025-08-30 17:05:15,338 - Step 175: loss_det_center=172.9500, loss_det_obj=2.7490, loss_det_size=8.3491, loss_det_angle=0.0528, loss_det_cls=2.1229, loss_unmatched_gt=0.0000, loss_detection=186.2238, loss_objective=372.4475 | Pos samples: 400
+No valid query points in detection3d_000020
+2025-08-30 17:05:24,833 - Step 176: loss_det_center=191.3151, loss_det_obj=2.7738, loss_det_size=7.6293, loss_det_angle=0.0468, loss_det_cls=2.0797, loss_unmatched_gt=0.0000, loss_detection=203.8447, loss_objective=407.6893 | Pos samples: 400
+No valid query points in detection3d_000036
+2025-08-30 17:05:32,510 - Step 177: loss_det_center=207.9983, loss_det_obj=2.8680, loss_det_size=6.5968, loss_det_angle=0.0680, loss_det_cls=1.9865, loss_unmatched_gt=0.0000, loss_detection=219.5176, loss_objective=439.0352 | Pos samples: 300
+No valid query points in detection3d_000014
+No valid query points in detection3d_000022
+2025-08-30 17:05:38,921 - Step 178: loss_det_center=202.6840, loss_det_obj=2.9488, loss_det_size=5.6744, loss_det_angle=0.0669, loss_det_cls=2.0431, loss_unmatched_gt=0.0000, loss_detection=213.4173, loss_objective=426.8345 | Pos samples: 400
+No valid query points in detection3d_000011
+2025-08-30 17:05:46,238 - Step 179: loss_det_center=211.4307, loss_det_obj=2.7553, loss_det_size=6.1862, loss_det_angle=0.0574, loss_det_cls=2.6720, loss_unmatched_gt=0.0000, loss_detection=223.1016, loss_objective=446.2032 | Pos samples: 300
+No valid query points in detection3d_000024
+No valid query points in detection3d_000006
+2025-08-30 17:05:54,412 - Step 180: loss_det_center=211.6917, loss_det_obj=2.6179, loss_det_size=5.6513, loss_det_angle=0.0547, loss_det_cls=2.7288, loss_unmatched_gt=0.0000, loss_detection=222.7444, loss_objective=445.4887 | Pos samples: 400
+No valid query points in detection3d_000020
+No valid query points in detection3d_000025
+2025-08-30 17:06:01,726 - Step 181: loss_det_center=208.6439, loss_det_obj=2.6574, loss_det_size=4.3390, loss_det_angle=0.0560, loss_det_cls=2.6740, loss_unmatched_gt=0.0000, loss_detection=218.3704, loss_objective=436.7407 | Pos samples: 400
+No valid query points in detection3d_000014
+2025-08-30 17:06:07,652 - Step 182: loss_det_center=179.8628, loss_det_obj=2.3363, loss_det_size=3.1803, loss_det_angle=0.0463, loss_det_cls=1.9043, loss_unmatched_gt=0.0000, loss_detection=187.3300, loss_objective=374.6600 | Pos samples: 400
+No valid query points in detection3d_000010
+2025-08-30 17:06:17,740 - Step 183: loss_det_center=173.7713, loss_det_obj=2.5760, loss_det_size=6.1797, loss_det_angle=0.0499, loss_det_cls=2.3369, loss_unmatched_gt=0.0000, loss_detection=184.9138, loss_objective=369.8277 | Pos samples: 400
+No valid query points in detection3d_000014
+2025-08-30 17:06:23,612 - Step 184: loss_det_center=167.6814, loss_det_obj=2.3870, loss_det_size=6.8509, loss_det_angle=0.0470, loss_det_cls=1.6485, loss_unmatched_gt=0.0000, loss_detection=178.6148, loss_objective=357.2297 | Pos samples: 400
+[DEBUG Composed] Received from base_dataset:
+  gt_boxes type: <class 'numpy.ndarray'>
+  gt_boxes shape: (27, 7)
+No valid query points in detection3d_000010
+No valid query points in detection3d_000030
+2025-08-30 17:06:31,987 - Step 185: loss_det_center=192.3588, loss_det_obj=2.5796, loss_det_size=6.3742, loss_det_angle=0.0414, loss_det_cls=2.2044, loss_unmatched_gt=0.0000, loss_detection=203.5584, loss_objective=407.1168 | Pos samples: 400
+No valid query points in detection3d_000010
+No valid query points in detection3d_000033
+2025-08-30 17:06:42,702 - Step 186: loss_det_center=184.6196, loss_det_obj=2.7261, loss_det_size=6.5110, loss_det_angle=0.0480, loss_det_cls=2.2095, loss_unmatched_gt=0.0000, loss_detection=196.1141, loss_objective=392.2282 | Pos samples: 400
+No valid query points in detection3d_000030
+2025-08-30 17:06:54,235 - Step 187: loss_det_center=206.1047, loss_det_obj=2.7340, loss_det_size=7.6983, loss_det_angle=0.0291, loss_det_cls=2.4027, loss_unmatched_gt=0.0000, loss_detection=218.9687, loss_objective=437.9375 | Pos samples: 400
+No valid query points in detection3d_000013
+2025-08-30 17:07:04,758 - Step 188: loss_det_center=192.8467, loss_det_obj=2.6658, loss_det_size=4.4887, loss_det_angle=0.0413, loss_det_cls=2.4409, loss_unmatched_gt=0.0000, loss_detection=202.4834, loss_objective=404.9668 | Pos samples: 400
+No valid query points in detection3d_000005
+2025-08-30 17:07:14,247 - Step 189: loss_det_center=174.6873, loss_det_obj=2.6745, loss_det_size=5.0570, loss_det_angle=0.0453, loss_det_cls=2.4311, loss_unmatched_gt=0.0000, loss_detection=184.8953, loss_objective=369.7907 | Pos samples: 400
+No valid query points in detection3d_000027
+2025-08-30 17:07:18,341 - Step 190: loss_det_center=233.7231, loss_det_obj=2.6871, loss_det_size=2.4469, loss_det_angle=0.0293, loss_det_cls=3.3967, loss_unmatched_gt=0.0000, loss_detection=242.2831, loss_objective=484.5662 | Pos samples: 300
+No valid query points in detection3d_000006
+2025-08-30 17:07:31,241 - Step 191: loss_det_center=191.2031, loss_det_obj=2.5892, loss_det_size=2.5993, loss_det_angle=0.0453, loss_det_cls=2.8570, loss_unmatched_gt=0.0000, loss_detection=199.2939, loss_objective=398.5878 | Pos samples: 400
+No valid query points in detection3d_000036
+2025-08-30 17:07:42,329 - Step 192: loss_det_center=197.3456, loss_det_obj=2.3526, loss_det_size=2.2200, loss_det_angle=0.0434, loss_det_cls=1.9503, loss_unmatched_gt=0.0000, loss_detection=203.9119, loss_objective=407.8238 | Pos samples: 400
+No valid query points in detection3d_000037
+2025-08-30 17:07:49,523 - Step 193: loss_det_center=195.2920, loss_det_obj=2.4666, loss_det_size=2.7434, loss_det_angle=0.0518, loss_det_cls=2.2277, loss_unmatched_gt=0.0000, loss_detection=202.7814, loss_objective=405.5629 | Pos samples: 300
+No valid query points in detection3d_000009
+2025-08-30 17:07:54,433 - Step 194: loss_det_center=168.1910, loss_det_obj=2.5481, loss_det_size=3.7996, loss_det_angle=0.0374, loss_det_cls=2.4783, loss_unmatched_gt=0.0000, loss_detection=177.0544, loss_objective=354.1088 | Pos samples: 400
+No valid query points in detection3d_000003
+2025-08-30 17:08:01,938 - Step 195: loss_det_center=165.9293, loss_det_obj=2.8419, loss_det_size=3.1392, loss_det_angle=0.0487, loss_det_cls=2.3360, loss_unmatched_gt=0.0000, loss_detection=174.2951, loss_objective=348.5902 | Pos samples: 300
+No valid query points in detection3d_000008
+2025-08-30 17:08:14,175 - Step 196: loss_det_center=158.3662, loss_det_obj=2.6031, loss_det_size=2.6703, loss_det_angle=0.0449, loss_det_cls=2.4434, loss_unmatched_gt=0.0000, loss_detection=166.1280, loss_objective=332.2559 | Pos samples: 400
+No valid query points in detection3d_000012
+2025-08-30 17:08:23,148 - Step 197: loss_det_center=169.1386, loss_det_obj=2.6446, loss_det_size=5.0469, loss_det_angle=0.0324, loss_det_cls=2.5465, loss_unmatched_gt=0.0000, loss_detection=179.4090, loss_objective=358.8181 | Pos samples: 400
+No valid query points in detection3d_000014
+2025-08-30 17:08:32,931 - Step 198: loss_det_center=181.5635, loss_det_obj=2.7767, loss_det_size=3.0762, loss_det_angle=0.0522, loss_det_cls=1.8839, loss_unmatched_gt=0.0000, loss_detection=189.3525, loss_objective=378.7051 | Pos samples: 300
+No valid query points in detection3d_000034
+2025-08-30 17:08:41,918 - Step 199: loss_det_center=196.0314, loss_det_obj=2.6343, loss_det_size=2.9951, loss_det_angle=0.0460, loss_det_cls=2.0364, loss_unmatched_gt=0.0000, loss_detection=203.7433, loss_objective=407.4867 | Pos samples: 400
+No valid query points in detection3d_000027
+2025-08-30 17:08:52,589 - Step 200: loss_det_center=217.4976, loss_det_obj=2.6698, loss_det_size=1.7579, loss_det_angle=0.0260, loss_det_cls=2.1849, loss_unmatched_gt=0.0000, loss_detection=224.1362, loss_objective=448.2725 | Pos samples: 400
+No valid query points in detection3d_000008
+No valid query points in detection3d_000028
+2025-08-30 17:09:00,597 - Step 201: loss_det_center=196.8028, loss_det_obj=2.6164, loss_det_size=1.7372, loss_det_angle=0.0459, loss_det_cls=3.2233, loss_unmatched_gt=0.0000, loss_detection=204.4256, loss_objective=408.8511 | Pos samples: 400
+2025-08-30 17:09:00,598 - Train Metrics:
+2025-08-30 17:09:00,598 -
+Epoch 8/10
+Building dynamic dataloader with epoch: 7
+No valid query points in detection3d_000036
+2025-08-30 17:09:09,816 - Step 202: loss_det_center=201.2135, loss_det_obj=2.4512, loss_det_size=2.1728, loss_det_angle=0.0435, loss_det_cls=1.9202, loss_unmatched_gt=0.0000, loss_detection=207.8011, loss_objective=415.6022 | Pos samples: 400
+No valid query points in detection3d_000019
+2025-08-30 17:09:17,255 - Step 203: loss_det_center=199.9195, loss_det_obj=3.0614, loss_det_size=2.3745, loss_det_angle=0.0712, loss_det_cls=1.6276, loss_unmatched_gt=0.0000, loss_detection=207.0541, loss_objective=414.1082 | Pos samples: 300
+No valid query points in detection3d_000012
+No valid query points in detection3d_000038
+2025-08-30 17:09:22,911 - Step 204: loss_det_center=205.9850, loss_det_obj=2.8556, loss_det_size=3.6396, loss_det_angle=0.0501, loss_det_cls=1.5331, loss_unmatched_gt=0.0000, loss_detection=214.0636, loss_objective=428.1271 | Pos samples: 400
+No valid query points in detection3d_000039
+2025-08-30 17:09:35,327 - Step 205: loss_det_center=246.6769, loss_det_obj=3.0562, loss_det_size=2.9307, loss_det_angle=0.0791, loss_det_cls=1.4694, loss_unmatched_gt=0.0000, loss_detection=254.2122, loss_objective=508.4244 | Pos samples: 400
+No valid query points in detection3d_000028
+2025-08-30 17:09:41,369 - Step 206: loss_det_center=219.3026, loss_det_obj=2.7556, loss_det_size=3.1283, loss_det_angle=0.0388, loss_det_cls=1.8691, loss_unmatched_gt=0.0000, loss_detection=227.0944, loss_objective=454.1888 | Pos samples: 300
+No valid query points in detection3d_000001
+2025-08-30 17:09:52,217 - Step 207: loss_det_center=168.4684, loss_det_obj=2.8535, loss_det_size=3.5074, loss_det_angle=0.0278, loss_det_cls=2.0803, loss_unmatched_gt=0.0000, loss_detection=176.9374, loss_objective=353.8748 | Pos samples: 400
+No valid query points in detection3d_000000
+No valid query points in detection3d_000017
+2025-08-30 17:09:59,781 - Step 208: loss_det_center=181.5589, loss_det_obj=2.7921, loss_det_size=2.9862, loss_det_angle=0.0396, loss_det_cls=2.0392, loss_unmatched_gt=0.0000, loss_detection=189.4160, loss_objective=378.8320 | Pos samples: 400
+No valid query points in detection3d_000010
+2025-08-30 17:10:05,263 - Step 209: loss_det_center=177.2580, loss_det_obj=2.7567, loss_det_size=3.1080, loss_det_angle=0.0416, loss_det_cls=1.8744, loss_unmatched_gt=0.0000, loss_detection=185.0387, loss_objective=370.0773 | Pos samples: 300
+No valid query points in detection3d_000010
+2025-08-30 17:10:16,775 - Step 210: loss_det_center=176.0691, loss_det_obj=2.9118, loss_det_size=3.6744, loss_det_angle=0.0513, loss_det_cls=1.9064, loss_unmatched_gt=0.0000, loss_detection=184.6131, loss_objective=369.2261 | Pos samples: 400
+No valid query points in detection3d_000001
+2025-08-30 17:10:27,770 - Step 211: loss_det_center=171.3560, loss_det_obj=2.9219, loss_det_size=3.7949, loss_det_angle=0.0315, loss_det_cls=1.9164, loss_unmatched_gt=0.0000, loss_detection=180.0207, loss_objective=360.0414 | Pos samples: 400
+No valid query points in detection3d_000006
+2025-08-30 17:10:38,079 - Step 212: loss_det_center=178.5049, loss_det_obj=2.9617, loss_det_size=3.5565, loss_det_angle=0.0450, loss_det_cls=2.0318, loss_unmatched_gt=0.0000, loss_detection=187.0998, loss_objective=374.1997 | Pos samples: 400
+No valid query points in detection3d_000000
+2025-08-30 17:10:52,282 - Step 213: loss_det_center=164.8297, loss_det_obj=2.7986, loss_det_size=2.5996, loss_det_angle=0.0253, loss_det_cls=2.1304, loss_unmatched_gt=0.0000, loss_detection=172.3836, loss_objective=344.7671 | Pos samples: 400
+No valid query points in detection3d_000004
+2025-08-30 17:11:00,844 - Step 214: loss_det_center=166.5165, loss_det_obj=2.7667, loss_det_size=1.5086, loss_det_angle=0.0699, loss_det_cls=2.0027, loss_unmatched_gt=0.0000, loss_detection=172.8644, loss_objective=345.7287 | Pos samples: 300
+[DEBUG Composed] Received from base_dataset:
+  gt_boxes type: <class 'numpy.ndarray'>
+  gt_boxes shape: (26, 7)
+No valid query points in detection3d_000005
+No valid query points in detection3d_000003
+2025-08-30 17:11:07,443 - Step 215: loss_det_center=176.1686, loss_det_obj=2.7327, loss_det_size=3.3266, loss_det_angle=0.0494, loss_det_cls=1.8057, loss_unmatched_gt=0.0000, loss_detection=184.0831, loss_objective=368.1661 | Pos samples: 400
+No valid query points in detection3d_000017
+2025-08-30 17:11:16,413 - Step 216: loss_det_center=189.3587, loss_det_obj=2.6846, loss_det_size=1.9213, loss_det_angle=0.0428, loss_det_cls=1.9163, loss_unmatched_gt=0.0000, loss_detection=195.9237, loss_objective=391.8474 | Pos samples: 300
+No valid query points in detection3d_000025
+No valid query points in detection3d_000010
+2025-08-30 17:11:23,731 - Step 217: loss_det_center=195.6994, loss_det_obj=2.6800, loss_det_size=1.8319, loss_det_angle=0.0459, loss_det_cls=2.1085, loss_unmatched_gt=0.0000, loss_detection=202.3658, loss_objective=404.7317 | Pos samples: 400
+No valid query points in detection3d_000022
+No valid query points in detection3d_000015
+2025-08-30 17:11:31,817 - Step 218: loss_det_center=189.5513, loss_det_obj=2.7294, loss_det_size=2.0548, loss_det_angle=0.0431, loss_det_cls=2.0755, loss_unmatched_gt=0.0000, loss_detection=196.4542, loss_objective=392.9084 | Pos samples: 397
+No valid query points in detection3d_000024
+No valid query points in detection3d_000011
+2025-08-30 17:11:38,826 - Step 219: loss_det_center=196.8060, loss_det_obj=2.7438, loss_det_size=2.5547, loss_det_angle=0.0402, loss_det_cls=2.1148, loss_unmatched_gt=0.0000, loss_detection=204.2595, loss_objective=408.5190 | Pos samples: 398
+No valid query points in detection3d_000034
+No valid query points in detection3d_000031
+2025-08-30 17:11:51,203 - Step 220: loss_det_center=230.0719, loss_det_obj=2.7370, loss_det_size=3.1408, loss_det_angle=0.0456, loss_det_cls=2.2685, loss_unmatched_gt=0.0000, loss_detection=238.2639, loss_objective=476.5278 | Pos samples: 393
+No valid query points in detection3d_000034
+2025-08-30 17:11:58,780 - Step 221: loss_det_center=233.9391, loss_det_obj=2.7487, loss_det_size=2.3047, loss_det_angle=0.0559, loss_det_cls=1.4146, loss_unmatched_gt=0.0000, loss_detection=240.4629, loss_objective=480.9257 | Pos samples: 300
+No valid query points in detection3d_000026
+2025-08-30 17:12:07,325 - Step 222: loss_det_center=225.7120, loss_det_obj=2.7463, loss_det_size=2.5162, loss_det_angle=0.0346, loss_det_cls=1.7101, loss_unmatched_gt=0.0000, loss_detection=232.7193, loss_objective=465.4385 | Pos samples: 399
+No valid query points in detection3d_000031
+2025-08-30 17:12:13,077 - Step 223: loss_det_center=222.6856, loss_det_obj=2.7923, loss_det_size=2.9565, loss_det_angle=0.0287, loss_det_cls=1.2725, loss_unmatched_gt=0.0000, loss_detection=229.7356, loss_objective=459.4711 | Pos samples: 294
+No valid query points in detection3d_000026
+No valid query points in detection3d_000027
+2025-08-30 17:12:19,159 - Step 224: loss_det_center=231.0647, loss_det_obj=2.8105, loss_det_size=2.1523, loss_det_angle=0.0262, loss_det_cls=1.3704, loss_unmatched_gt=0.0000, loss_detection=237.4241, loss_objective=474.8483 | Pos samples: 400
+No valid query points in detection3d_000009
+No valid query points in detection3d_000035
+2025-08-30 17:12:24,565 - Step 225: loss_det_center=200.1173, loss_det_obj=2.7243, loss_det_size=2.8155, loss_det_angle=0.0340, loss_det_cls=1.4891, loss_unmatched_gt=0.0000, loss_detection=207.1802, loss_objective=414.3604 | Pos samples: 392
+No valid query points in detection3d_000033
+2025-08-30 17:12:32,654 - Step 226: loss_det_center=221.1902, loss_det_obj=2.7135, loss_det_size=1.8919, loss_det_angle=0.0335, loss_det_cls=1.3548, loss_unmatched_gt=0.0000, loss_detection=227.1840, loss_objective=454.3680 | Pos samples: 397
+No valid query points in detection3d_000033
+2025-08-30 17:12:44,317 - Step 227: loss_det_center=228.2784, loss_det_obj=2.8003, loss_det_size=2.3172, loss_det_angle=0.0373, loss_det_cls=1.2893, loss_unmatched_gt=0.0000, loss_detection=234.7225, loss_objective=469.4451 | Pos samples: 390
+No valid query points in detection3d_000023
+2025-08-30 17:12:51,319 - Step 228: loss_det_center=204.4627, loss_det_obj=2.7330, loss_det_size=1.7264, loss_det_angle=0.0364, loss_det_cls=1.5040, loss_unmatched_gt=0.0000, loss_detection=210.4625, loss_objective=420.9250 | Pos samples: 397
+No valid query points in detection3d_000023
+2025-08-30 17:12:57,582 - Step 229: loss_det_center=215.8801, loss_det_obj=2.8285, loss_det_size=1.2166, loss_det_angle=0.0382, loss_det_cls=1.1387, loss_unmatched_gt=0.0000, loss_detection=221.1021, loss_objective=442.2043 | Pos samples: 400
+No valid query points in detection3d_000017
+2025-08-30 17:13:09,775 - Step 230: loss_det_center=180.0738, loss_det_obj=2.6241, loss_det_size=1.2221, loss_det_angle=0.0441, loss_det_cls=1.4837, loss_unmatched_gt=0.0000, loss_detection=185.4478, loss_objective=370.8957 | Pos samples: 389
+No valid query points in detection3d_000007
+No valid query points in detection3d_000017
+2025-08-30 17:13:16,653 - Step 231: loss_det_center=168.8594, loss_det_obj=2.6060, loss_det_size=1.6234, loss_det_angle=0.0323, loss_det_cls=1.5253, loss_unmatched_gt=0.0000, loss_detection=174.6463, loss_objective=349.2927 | Pos samples: 393
+2025-08-30 17:13:16,654 - Train Metrics:
+2025-08-30 17:13:16,655 -
+Epoch 9/10
+Building dynamic dataloader with epoch: 8
+No valid query points in detection3d_000035
+2025-08-30 17:13:25,412 - Step 232: loss_det_center=215.1592, loss_det_obj=2.5873, loss_det_size=1.5611, loss_det_angle=0.0300, loss_det_cls=1.3204, loss_unmatched_gt=0.0000, loss_detection=220.6581, loss_objective=441.3161 | Pos samples: 290
+No valid query points in detection3d_000000
+2025-08-30 17:13:32,359 - Step 233: loss_det_center=161.7045, loss_det_obj=2.6149, loss_det_size=2.4716, loss_det_angle=0.0289, loss_det_cls=1.4968, loss_unmatched_gt=0.0000, loss_detection=168.3167, loss_objective=336.6335 | Pos samples: 394
+No valid query points in detection3d_000036
+No valid query points in detection3d_000031
+2025-08-30 17:13:40,717 - Step 234: loss_det_center=215.9161, loss_det_obj=2.6181, loss_det_size=2.7926, loss_det_angle=0.0354, loss_det_cls=1.4272, loss_unmatched_gt=0.0000, loss_detection=222.7895, loss_objective=445.5789 | Pos samples: 400
+No valid query points in detection3d_000004
+2025-08-30 17:13:49,608 - Step 235: loss_det_center=174.0859, loss_det_obj=2.6548, loss_det_size=1.7393, loss_det_angle=0.0547, loss_det_cls=1.4375, loss_unmatched_gt=0.0000, loss_detection=179.9723, loss_objective=359.9445 | Pos samples: 293
+No valid query points in detection3d_000004
+2025-08-30 17:13:56,043 - Step 236: loss_det_center=163.4505, loss_det_obj=2.5683, loss_det_size=1.2697, loss_det_angle=0.0483, loss_det_cls=1.4111, loss_unmatched_gt=0.0000, loss_detection=168.7478, loss_objective=337.4956 | Pos samples: 292
+No valid query points in detection3d_000012
+2025-08-30 17:14:07,438 - Step 237: loss_det_center=172.9632, loss_det_obj=2.5967, loss_det_size=2.0072, loss_det_angle=0.0255, loss_det_cls=1.4272, loss_unmatched_gt=0.0000, loss_detection=179.0198, loss_objective=358.0396 | Pos samples: 393
+No valid query points in detection3d_000022
+2025-08-30 17:14:18,839 - Step 238: loss_det_center=172.6715, loss_det_obj=2.6070, loss_det_size=2.5935, loss_det_angle=0.0390, loss_det_cls=1.6812, loss_unmatched_gt=0.0000, loss_detection=179.5921, loss_objective=359.1843 | Pos samples: 374
+No valid query points in detection3d_000025
+2025-08-30 17:14:31,941 - Step 239: loss_det_center=198.9225, loss_det_obj=2.5908, loss_det_size=2.7716, loss_det_angle=0.0390, loss_det_cls=1.5475, loss_unmatched_gt=0.0000, loss_detection=205.8714, loss_objective=411.7428 | Pos samples: 386
+No valid query points in detection3d_000037
+2025-08-30 17:14:39,928 - Step 240: loss_det_center=231.4185, loss_det_obj=2.5353, loss_det_size=2.1884, loss_det_angle=0.0548, loss_det_cls=1.2618, loss_unmatched_gt=0.0000, loss_detection=237.4587, loss_objective=474.9175 | Pos samples: 390
+No valid query points in detection3d_000031
+2025-08-30 17:14:48,784 - Step 241: loss_det_center=207.4078, loss_det_obj=2.5346, loss_det_size=3.0336, loss_det_angle=0.0279, loss_det_cls=1.2762, loss_unmatched_gt=0.0000, loss_detection=214.2801, loss_objective=428.5602 | Pos samples: 300
+No valid query points in detection3d_000017
+2025-08-30 17:14:55,283 - Step 242: loss_det_center=177.4281, loss_det_obj=2.5008, loss_det_size=2.6415, loss_det_angle=0.0429, loss_det_cls=1.2499, loss_unmatched_gt=0.0000, loss_detection=183.8631, loss_objective=367.7262 | Pos samples: 300
+No valid query points in detection3d_000038
+[DEBUG Composed] Received from base_dataset:
+  gt_boxes type: <class 'numpy.ndarray'>
+  gt_boxes shape: (30, 7)
+No valid query points in detection3d_000027
+2025-08-30 17:15:00,705 - Step 243: loss_det_center=212.4159, loss_det_obj=2.3830, loss_det_size=2.4173, loss_det_angle=0.0304, loss_det_cls=1.3035, loss_unmatched_gt=0.0000, loss_detection=218.5502, loss_objective=437.1004 | Pos samples: 400
+No valid query points in detection3d_000025
+No valid query points in detection3d_000002
+2025-08-30 17:15:10,844 - Step 244: loss_det_center=196.2784, loss_det_obj=2.5457, loss_det_size=3.0415, loss_det_angle=0.0457, loss_det_cls=1.4434, loss_unmatched_gt=0.0000, loss_detection=203.3548, loss_objective=406.7095 | Pos samples: 400
+No valid query points in detection3d_000013
+2025-08-30 17:15:17,484 - Step 245: loss_det_center=187.6917, loss_det_obj=2.7390, loss_det_size=2.6339, loss_det_angle=0.0535, loss_det_cls=1.2751, loss_unmatched_gt=0.0000, loss_detection=194.3931, loss_objective=388.7862 | Pos samples: 300
+No valid query points in detection3d_000018
+No valid query points in detection3d_000029
+2025-08-30 17:15:27,463 - Step 246: loss_det_center=204.8712, loss_det_obj=2.6547, loss_det_size=1.9117, loss_det_angle=0.0410, loss_det_cls=1.3968, loss_unmatched_gt=0.0000, loss_detection=210.8753, loss_objective=421.7507 | Pos samples: 400
+No valid query points in detection3d_000016
+2025-08-30 17:15:32,277 - Step 247: loss_det_center=184.1908, loss_det_obj=2.4476, loss_det_size=2.3417, loss_det_angle=0.0421, loss_det_cls=1.4858, loss_unmatched_gt=0.0000, loss_detection=190.5080, loss_objective=381.0159 | Pos samples: 300
+No valid query points in detection3d_000029
+2025-08-30 17:15:45,053 - Step 248: loss_det_center=225.9065, loss_det_obj=2.5178, loss_det_size=2.5683, loss_det_angle=0.0437, loss_det_cls=1.2407, loss_unmatched_gt=0.0000, loss_detection=232.2770, loss_objective=464.5540 | Pos samples: 400
+No valid query points in detection3d_000027
+No valid query points in detection3d_000034
+2025-08-30 17:15:53,579 - Step 249: loss_det_center=207.1329, loss_det_obj=2.5133, loss_det_size=2.3559, loss_det_angle=0.0385, loss_det_cls=1.1457, loss_unmatched_gt=0.0000, loss_detection=213.1863, loss_objective=426.3726 | Pos samples: 400
+No valid query points in detection3d_000030
+2025-08-30 17:15:58,750 - Step 250: loss_det_center=212.5905, loss_det_obj=2.5601, loss_det_size=2.5507, loss_det_angle=0.0324, loss_det_cls=1.1098, loss_unmatched_gt=0.0000, loss_detection=218.8435, loss_objective=437.6870 | Pos samples: 300
+No valid query points in detection3d_000003
+2025-08-30 17:16:07,118 - Step 251: loss_det_center=164.6508, loss_det_obj=2.9592, loss_det_size=4.2518, loss_det_angle=0.0542, loss_det_cls=0.9445, loss_unmatched_gt=0.0000, loss_detection=172.8606, loss_objective=345.7213 | Pos samples: 400
+No valid query points in detection3d_000001
+No valid query points in detection3d_000012
+2025-08-30 17:16:16,205 - Step 252: loss_det_center=166.2170, loss_det_obj=2.6593, loss_det_size=2.1431, loss_det_angle=0.0411, loss_det_cls=1.6584, loss_unmatched_gt=0.0000, loss_detection=172.7190, loss_objective=345.4381 | Pos samples: 400
+No valid query points in detection3d_000020
+2025-08-30 17:16:20,911 - Step 253: loss_det_center=182.3914, loss_det_obj=2.7007, loss_det_size=1.9247, loss_det_angle=0.0485, loss_det_cls=1.1911, loss_unmatched_gt=0.0000, loss_detection=188.2564, loss_objective=376.5129 | Pos samples: 300
+No valid query points in detection3d_000020
+2025-08-30 17:16:28,916 - Step 254: loss_det_center=179.5292, loss_det_obj=2.7572, loss_det_size=2.9778, loss_det_angle=0.0468, loss_det_cls=1.1279, loss_unmatched_gt=0.0000, loss_detection=186.4388, loss_objective=372.8776 | Pos samples: 300
+No valid query points in detection3d_000018
+No valid query points in detection3d_000014
+2025-08-30 17:16:33,598 - Step 255: loss_det_center=174.6838, loss_det_obj=2.7168, loss_det_size=4.5394, loss_det_angle=0.0488, loss_det_cls=1.8940, loss_unmatched_gt=0.0000, loss_detection=183.8829, loss_objective=367.7658 | Pos samples: 399
+No valid query points in detection3d_000024
+2025-08-30 17:16:39,156 - Step 256: loss_det_center=211.7303, loss_det_obj=2.7418, loss_det_size=4.1417, loss_det_angle=0.0587, loss_det_cls=1.8445, loss_unmatched_gt=0.0000, loss_detection=220.5169, loss_objective=441.0338 | Pos samples: 300
+No valid query points in detection3d_000009
+2025-08-30 17:16:49,532 - Step 257: loss_det_center=165.5699, loss_det_obj=2.6717, loss_det_size=2.9138, loss_det_angle=0.0478, loss_det_cls=1.2048, loss_unmatched_gt=0.0000, loss_detection=172.4080, loss_objective=344.8160 | Pos samples: 397
+No valid query points in detection3d_000010
+No valid query points in detection3d_000007
+2025-08-30 17:16:54,596 - Step 258: loss_det_center=173.6844, loss_det_obj=2.7261, loss_det_size=3.1838, loss_det_angle=0.0442, loss_det_cls=1.1726, loss_unmatched_gt=0.0000, loss_detection=180.8112, loss_objective=361.6225 | Pos samples: 400
+No valid query points in detection3d_000035
+No valid query points in detection3d_000007
+2025-08-30 17:17:03,349 - Step 259: loss_det_center=194.7502, loss_det_obj=2.8443, loss_det_size=5.7213, loss_det_angle=0.0343, loss_det_cls=1.1495, loss_unmatched_gt=0.0000, loss_detection=204.4995, loss_objective=408.9990 | Pos samples: 398
+No valid query points in detection3d_000022
+No valid query points in detection3d_000008
+2025-08-30 17:17:10,655 - Step 260: loss_det_center=161.2744, loss_det_obj=2.6984, loss_det_size=3.7045, loss_det_angle=0.0451, loss_det_cls=1.0918, loss_unmatched_gt=0.0000, loss_detection=168.8143, loss_objective=337.6285 | Pos samples: 399
+No valid query points in detection3d_000017
+2025-08-30 17:17:16,539 - Step 261: loss_det_center=169.7081, loss_det_obj=2.5706, loss_det_size=2.7550, loss_det_angle=0.0405, loss_det_cls=1.1158, loss_unmatched_gt=0.0000, loss_detection=176.1900, loss_objective=352.3799 | Pos samples: 300
+2025-08-30 17:17:16,539 - Train Metrics:
+2025-08-30 17:17:16,539 -
+Epoch 10/10
+Building dynamic dataloader with epoch: 9
+No valid query points in detection3d_000001
+2025-08-30 17:17:21,909 - Step 262: loss_det_center=166.0643, loss_det_obj=2.5512, loss_det_size=2.4805, loss_det_angle=0.0375, loss_det_cls=1.2746, loss_unmatched_gt=0.0000, loss_detection=172.4081, loss_objective=344.8162 | Pos samples: 300
+No valid query points in detection3d_000022
+2025-08-30 17:17:30,565 - Step 263: loss_det_center=165.4041, loss_det_obj=2.5421, loss_det_size=1.8274, loss_det_angle=0.0426, loss_det_cls=1.0402, loss_unmatched_gt=0.0000, loss_detection=170.8563, loss_objective=341.7125 | Pos samples: 400
+No valid query points in detection3d_000033
+2025-08-30 17:17:38,136 - Step 264: loss_det_center=218.1331, loss_det_obj=2.5721, loss_det_size=1.9112, loss_det_angle=0.0404, loss_det_cls=0.9097, loss_unmatched_gt=0.0000, loss_detection=223.5665, loss_objective=447.1330 | Pos samples: 300
+No valid query points in detection3d_000001
+2025-08-30 17:17:42,578 - Step 265: loss_det_center=164.2043, loss_det_obj=2.5801, loss_det_size=2.3949, loss_det_angle=0.0401, loss_det_cls=1.0105, loss_unmatched_gt=0.0000, loss_detection=170.2299, loss_objective=340.4599 | Pos samples: 296
+No valid query points in detection3d_000021
+2025-08-30 17:17:52,355 - Step 266: loss_det_center=165.5032, loss_det_obj=2.6453, loss_det_size=1.3876, loss_det_angle=0.0388, loss_det_cls=1.3245, loss_unmatched_gt=0.0000, loss_detection=170.8994, loss_objective=341.7988 | Pos samples: 396
+No valid query points in detection3d_000039
+2025-08-30 17:18:02,920 - Step 267: loss_det_center=214.0628, loss_det_obj=2.5120, loss_det_size=1.2529, loss_det_angle=0.0499, loss_det_cls=1.1479, loss_unmatched_gt=0.0000, loss_detection=219.0255, loss_objective=438.0509 | Pos samples: 400
+No valid query points in detection3d_000005
+No valid query points in detection3d_000000
+2025-08-30 17:18:08,942 - Step 268: loss_det_center=162.1850, loss_det_obj=2.5013, loss_det_size=1.9029, loss_det_angle=0.0359, loss_det_cls=1.1961, loss_unmatched_gt=0.0000, loss_detection=167.8212, loss_objective=335.6423 | Pos samples: 400
+No valid query points in detection3d_000028
+2025-08-30 17:18:16,923 - Step 269: loss_det_center=193.0673, loss_det_obj=2.5764, loss_det_size=1.5023, loss_det_angle=0.0402, loss_det_cls=1.0271, loss_unmatched_gt=0.0000, loss_detection=198.2133, loss_objective=396.4266 | Pos samples: 397
+No valid query points in detection3d_000037
+2025-08-30 17:18:24,524 - Step 270: loss_det_center=198.3230, loss_det_obj=2.3612, loss_det_size=1.8874, loss_det_angle=0.0464, loss_det_cls=1.1542, loss_unmatched_gt=0.0000, loss_detection=203.7722, loss_objective=407.5444 | Pos samples: 400
+No valid query points in detection3d_000033
+2025-08-30 17:18:32,690 - Step 271: loss_det_center=189.4865, loss_det_obj=2.4215, loss_det_size=1.8599, loss_det_angle=0.0367, loss_det_cls=1.1776, loss_unmatched_gt=0.0000, loss_detection=194.9822, loss_objective=389.9644 | Pos samples: 400
+No valid query points in detection3d_000021
+2025-08-30 17:18:39,091 - Step 272: loss_det_center=170.2755, loss_det_obj=2.6173, loss_det_size=1.6999, loss_det_angle=0.0339, loss_det_cls=1.3209, loss_unmatched_gt=0.0000, loss_detection=175.9475, loss_objective=351.8950 | Pos samples: 400
+No valid query points in detection3d_000010
+No valid query points in detection3d_000025
+2025-08-30 17:18:47,891 - Step 273: loss_det_center=174.7318, loss_det_obj=2.5093, loss_det_size=2.2866, loss_det_angle=0.0384, loss_det_cls=1.3656, loss_unmatched_gt=0.0000, loss_detection=180.9315, loss_objective=361.8631 | Pos samples: 400
+No valid query points in detection3d_000008
+2025-08-30 17:18:51,572 - Step 274: loss_det_center=177.0122, loss_det_obj=2.5517, loss_det_size=1.7516, loss_det_angle=0.0346, loss_det_cls=1.4730, loss_unmatched_gt=0.0000, loss_detection=182.8231, loss_objective=365.6462 | Pos samples: 300
+No valid query points in detection3d_000003
+2025-08-30 17:18:56,215 - Step 275: loss_det_center=178.5235, loss_det_obj=2.3756, loss_det_size=3.0156, loss_det_angle=0.0361, loss_det_cls=1.4729, loss_unmatched_gt=0.0000, loss_detection=185.4236, loss_objective=370.8473 | Pos samples: 300
+No valid query points in detection3d_000032
+2025-08-30 17:19:06,565 - Step 276: loss_det_center=186.8147, loss_det_obj=2.3237, loss_det_size=2.9929, loss_det_angle=0.0344, loss_det_cls=1.3551, loss_unmatched_gt=0.0000, loss_detection=193.5208, loss_objective=387.0416 | Pos samples: 400
+No valid query points in detection3d_000031
+2025-08-30 17:19:10,179 - Step 277: loss_det_center=172.3424, loss_det_obj=2.2039, loss_det_size=2.7198, loss_det_angle=0.0256, loss_det_cls=1.4129, loss_unmatched_gt=0.0000, loss_detection=178.7047, loss_objective=357.4093 | Pos samples: 300
+[DEBUG Composed] Received from base_dataset:
+  gt_boxes type: <class 'numpy.ndarray'>
+  gt_boxes shape: (27, 7)
+No valid query points in detection3d_000035
+No valid query points in detection3d_000020
+2025-08-30 17:19:17,504 - Step 278: loss_det_center=185.5065, loss_det_obj=2.3066, loss_det_size=1.2080, loss_det_angle=0.0236, loss_det_cls=1.3261, loss_unmatched_gt=0.0000, loss_detection=190.3708, loss_objective=380.7417 | Pos samples: 400
+No valid query points in detection3d_000016
+No valid query points in detection3d_000017
+2025-08-30 17:19:24,588 - Step 279: loss_det_center=169.5914, loss_det_obj=2.4477, loss_det_size=1.1102, loss_det_angle=0.0311, loss_det_cls=1.2753, loss_unmatched_gt=0.0000, loss_detection=174.4557, loss_objective=348.9115 | Pos samples: 398
+No valid query points in detection3d_000008
+No valid query points in detection3d_000008
+2025-08-30 17:19:33,660 - Step 280: loss_det_center=173.0837, loss_det_obj=2.5484, loss_det_size=2.0728, loss_det_angle=0.0391, loss_det_cls=1.2371, loss_unmatched_gt=0.0000, loss_detection=178.9811, loss_objective=357.9623 | Pos samples: 400
+No valid query points in detection3d_000006
+2025-08-30 17:19:41,090 - Step 281: loss_det_center=181.4601, loss_det_obj=2.4887, loss_det_size=1.8749, loss_det_angle=0.0393, loss_det_cls=1.0916, loss_unmatched_gt=0.0000, loss_detection=186.9546, loss_objective=373.9091 | Pos samples: 400
+No valid query points in detection3d_000022
+No valid query points in detection3d_000010
+2025-08-30 17:19:49,357 - Step 282: loss_det_center=183.5303, loss_det_obj=2.5905, loss_det_size=3.2582, loss_det_angle=0.0389, loss_det_cls=1.2892, loss_unmatched_gt=0.0000, loss_detection=190.7070, loss_objective=381.4140 | Pos samples: 400
+No valid query points in detection3d_000023
+No valid query points in detection3d_000030
+2025-08-30 17:19:58,287 - Step 283: loss_det_center=180.7705, loss_det_obj=2.3756, loss_det_size=2.1563, loss_det_angle=0.0240, loss_det_cls=1.4092, loss_unmatched_gt=0.0000, loss_detection=186.7355, loss_objective=373.4711 | Pos samples: 400
+No valid query points in detection3d_000005
+2025-08-30 17:20:04,547 - Step 284: loss_det_center=154.5636, loss_det_obj=2.2759, loss_det_size=3.6654, loss_det_angle=0.0354, loss_det_cls=1.4571, loss_unmatched_gt=0.0000, loss_detection=161.9974, loss_objective=323.9949 | Pos samples: 300
+No valid query points in detection3d_000002
+No valid query points in detection3d_000007
+2025-08-30 17:20:11,464 - Step 285: loss_det_center=153.4988, loss_det_obj=2.3765, loss_det_size=1.8271, loss_det_angle=0.0362, loss_det_cls=1.2907, loss_unmatched_gt=0.0000, loss_detection=159.0294, loss_objective=318.0587 | Pos samples: 400
+No valid query points in detection3d_000016
+2025-08-30 17:20:15,528 - Step 286: loss_det_center=152.4589, loss_det_obj=2.5604, loss_det_size=1.9462, loss_det_angle=0.0355, loss_det_cls=1.5614, loss_unmatched_gt=0.0000, loss_detection=158.5625, loss_objective=317.1249 | Pos samples: 300
+No valid query points in detection3d_000003
+No valid query points in detection3d_000022
+2025-08-30 17:20:20,701 - Step 287: loss_det_center=166.4396, loss_det_obj=2.4652, loss_det_size=3.0812, loss_det_angle=0.0448, loss_det_cls=1.7938, loss_unmatched_gt=0.0000, loss_detection=173.8246, loss_objective=347.6493 | Pos samples: 400
+No valid query points in detection3d_000020
+2025-08-30 17:20:24,952 - Step 288: loss_det_center=158.0792, loss_det_obj=2.4574, loss_det_size=2.6967, loss_det_angle=0.0299, loss_det_cls=1.4885, loss_unmatched_gt=0.0000, loss_detection=164.7517, loss_objective=329.5034 | Pos samples: 300
+No valid query points in detection3d_000028
+2025-08-30 17:20:29,600 - Step 289: loss_det_center=188.2259, loss_det_obj=2.4251, loss_det_size=3.1129, loss_det_angle=0.0330, loss_det_cls=1.2292, loss_unmatched_gt=0.0000, loss_detection=195.0261, loss_objective=390.0522 | Pos samples: 400
+No valid query points in detection3d_000017
+No valid query points in detection3d_000027
+2025-08-30 17:20:34,749 - Step 290: loss_det_center=173.3877, loss_det_obj=2.2493, loss_det_size=3.2499, loss_det_angle=0.0319, loss_det_cls=1.3963, loss_unmatched_gt=0.0000, loss_detection=180.3152, loss_objective=360.6303 | Pos samples: 400
+No valid query points in detection3d_000000
+2025-08-30 17:20:39,277 - Step 291: loss_det_center=172.8421, loss_det_obj=2.4252, loss_det_size=3.9028, loss_det_angle=0.0329, loss_det_cls=1.2078, loss_unmatched_gt=0.0000, loss_detection=180.4107, loss_objective=360.8214 | Pos samples: 300
+2025-08-30 17:20:39,278 - Train Metrics:
+Building dynamic dataloader with epoch: 9
+[DEBUG Composed] Received from base_dataset:
+  gt_boxes type: <class 'numpy.ndarray'>
+  gt_boxes shape: (26, 7)
+2025-08-30 17:20:43,563 - Val Metrics:
+2025-08-30 17:20:50,774 - Saved checkpoint: logs/detection_3d/ckpts/epoch_0009.pth
+
+进程已结束，退出代码为 0
